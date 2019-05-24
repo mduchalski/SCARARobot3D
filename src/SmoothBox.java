@@ -1,3 +1,4 @@
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Box;
@@ -52,5 +53,21 @@ public class SmoothBox extends Group {
         mid.setDrawMode(drawMode);
         left.setDrawMode(drawMode);
         right.setDrawMode(drawMode);
+    }
+
+    public DoubleProperty getPivotX() {
+        return left.translateXProperty();
+    }
+
+    public DoubleProperty getPivotY() {
+        return left.translateYProperty();
+    }
+
+    public DoubleProperty getPivotZ() {
+        return left.translateZProperty();
+    }
+
+    public double getWidth() {
+        return mid.getWidth();
     }
 }

@@ -8,13 +8,12 @@ import javafx.scene.transform.*;
 import javafx.stage.*;
 
 public class Main extends Application {
-    SmoothBox sBox;
+    Robot robot;
 
     public Group createContent() throws Exception {
         // Box
-        sBox = new SmoothBox(3, 1, 2);
-        sBox.setMaterial(new PhongMaterial(Color.ORANGE));
-        sBox.setDrawMode(DrawMode.FILL);
+        robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, -1.0, -1.0,
+                Color.DARKGRAY, Color.GREY);
 
         // Create and position camera
         Camera camera = new PerspectiveCamera(true);
@@ -32,7 +31,7 @@ public class Main extends Application {
 
         // Build the Scene Graph
         Group root = new Group();
-        root.getChildren().addAll(camera, sBox, pLight, aLight);
+        root.getChildren().addAll(camera, robot, pLight, aLight);
 
         // Use a SubScene
         SubScene subScene = new SubScene(root, 500,500, true, SceneAntialiasing.BALANCED);
@@ -58,16 +57,28 @@ public class Main extends Application {
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
                     case LEFT:
-                        sBox.getTransforms().add(new Rotate(-1, Rotate.Y_AXIS));
+                        robot.getTransforms().add(new Rotate(-1, Rotate.Y_AXIS));
                         break;
                     case RIGHT:
-                        sBox.getTransforms().add(new Rotate(1, Rotate.Y_AXIS));
+                        robot.getTransforms().add(new Rotate(1, Rotate.Y_AXIS));
                         break;
                     case UP:
-                        sBox.getTransforms().add(new Rotate(1, Rotate.X_AXIS));
+                        robot.getTransforms().add(new Rotate(1, Rotate.X_AXIS));
                         break;
                     case DOWN:
-                        sBox.getTransforms().add(new Rotate(-1, Rotate.X_AXIS));
+                        robot.getTransforms().add(new Rotate(-1, Rotate.X_AXIS));
+                        break;
+                    case Q:
+                        robot.rotateOuter(1);
+                        break;
+                    case A:
+                        robot.rotateOuter(-1);
+                        break;
+                    case W:
+                        robot.rotateInner(1);
+                        break;
+                    case S:
+                        robot.rotateInner(-1);
                         break;
                 }
             }
