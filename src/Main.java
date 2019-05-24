@@ -8,13 +8,13 @@ import javafx.scene.transform.*;
 import javafx.stage.*;
 
 public class Main extends Application {
-    Box testBox;
+    SmoothBox sBox;
 
     public Group createContent() throws Exception {
         // Box
-        testBox = new Box(5,5,5);
-        testBox.setMaterial(new PhongMaterial(Color.RED));
-        testBox.setDrawMode(DrawMode.FILL);
+        sBox = new SmoothBox(3, 1, 2);
+        sBox.setMaterial(new PhongMaterial(Color.ORANGE));
+        sBox.setDrawMode(DrawMode.FILL);
 
         // Create and position camera
         Camera camera = new PerspectiveCamera(true);
@@ -32,11 +32,11 @@ public class Main extends Application {
 
         // Build the Scene Graph
         Group root = new Group();
-        root.getChildren().addAll(camera, testBox, pLight, aLight);
+        root.getChildren().addAll(camera, sBox, pLight, aLight);
 
         // Use a SubScene
-        SubScene subScene = new SubScene(root, 500,500);
-        subScene.setFill(Color.ALICEBLUE);
+        SubScene subScene = new SubScene(root, 500,500, true, SceneAntialiasing.BALANCED);
+        subScene.setFill(Color.WHITE);
         subScene.setCamera(camera);
         Group group = new Group();
         group.getChildren().add(subScene);
@@ -58,16 +58,16 @@ public class Main extends Application {
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
                     case LEFT:
-                        testBox.getTransforms().add(new Rotate(-1, Rotate.Y_AXIS));
+                        sBox.getTransforms().add(new Rotate(-1, Rotate.Y_AXIS));
                         break;
                     case RIGHT:
-                        testBox.getTransforms().add(new Rotate(1, Rotate.Y_AXIS));
+                        sBox.getTransforms().add(new Rotate(1, Rotate.Y_AXIS));
                         break;
                     case UP:
-                        testBox.getTransforms().add(new Rotate(1, Rotate.X_AXIS));
+                        sBox.getTransforms().add(new Rotate(1, Rotate.X_AXIS));
                         break;
                     case DOWN:
-                        testBox.getTransforms().add(new Rotate(-1, Rotate.X_AXIS));
+                        sBox.getTransforms().add(new Rotate(-1, Rotate.X_AXIS));
                         break;
                 }
             }
