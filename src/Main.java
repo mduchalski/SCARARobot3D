@@ -12,7 +12,7 @@ public class Main extends Application {
 
     public Group createContent() throws Exception {
         // Box
-        robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, -1.0, -1.0,
+        robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 1.5,
                 Color.DARKGRAY, Color.GREY);
 
         // Create and position camera
@@ -79,6 +79,12 @@ public class Main extends Application {
                         break;
                     case S:
                         robot.rotateInner(-1);
+                        break;
+                    case E:
+                        robot.moveEffector(0.01);
+                        break;
+                    case D:
+                        robot.moveEffector(-0.01);
                         break;
                 }
             }

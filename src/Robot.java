@@ -15,7 +15,7 @@ public class Robot extends Group {
     Box base;
     Cylinder baseExtension, effector;
     SmoothBox armInner, armOuter;
-    double armInnerAngle;
+    double armInnerAngle, armOuterAngle;
 
     /**
      * Constructs a robot object based on given set of dimensions.
@@ -42,37 +42,55 @@ public class Robot extends Group {
         armOuter.setMaterial(primary); armOuter.setDrawMode(DrawMode.FILL);
         armOuter.setTranslateX(armInnerLength + armOuterLength/2.0);
         armOuter.setTranslateY(-baseExtensionHeight + armHeight/2.0);
+        armOuterAngle = armInnerAngle = 0.0;
+        effector = new Cylinder(effectorRadius, effectorHeight);
+        effector.setMaterial(secondary); effector.setDrawMode(DrawMode.FILL);
+        effector.setTranslateX(armInnerLength + armOuterLength);
+        effector.setTranslateY(-baseExtensionHeight);
 
-        // to-do: effector
-
-        getChildren().addAll(base, baseExtension, armInner, armOuter);
+        getChildren().addAll(base, baseExtension, armInner, armOuter, effector);
     }
 
     public void rotateInner(double angle) {
         // rotate inner arm
-        Rotate rotate = new Rotate(angle, Rotate.Y_AXIS);
+        armInnerAngle += angle;
+        Rotate rotate = new Rotate(armInnerAngle, Rotate.Y_AXIS);
         rotate.pivotXProperty().bind(armInner.getPivotX());
         rotate.pivotYProperty().bind(armInner.getPivotY());
         rotate.pivotZProperty().bind(armInner.getPivotZ());
+        armInner.getTransforms().clear();
         armInner.getTransforms().add(rotate);
 
         // translate outer arm to match
-        armOuter.getTransforms().add(new Translate(
-                armInner.getWidth() * (Math.cos(Math.toRadians(armInnerAngle+angle))
-                        - Math.cos(Math.toRadians(armInnerAngle))), 0,
-                -armInner.getWidth() * (Math.sin(Math.toRadians(armInnerAngle+angle))
-                        - Math.sin(Math.toRadians(armInnerAngle)))));
+        armOuter.setTranslateX(armOuter.getTranslateX() + armInner.getWidth() *
+                (Math.cos(Math.toRadians(armInnerAngle)) - Math.cos(Math.toRadians(armInnerAngle-angle))));
+        armOuter.setTranslateZ(armOuter.getTranslateZ() - armInner.getWidth() *
+                (Math.sin(Math.toRadians(armInnerAngle)) - Math.sin(Math.toRadians(armInnerAngle-angle))));
 
-        // keep track of the cumulative rotation angle
-        armInnerAngle += angle;
-        System.out.println(armInnerAngle);
+        // translate effector to match
+        effector.setTranslateX(effector.getTranslateX() + armInner.getWidth() *
+                (Math.cos(Math.toRadians(armInnerAngle)) - Math.cos(Math.toRadians(armInnerAngle-angle))));
+        effector.setTranslateZ(effector.getTranslateZ() - armInner.getWidth() *
+                (Math.sin(Math.toRadians(armInnerAngle)) - Math.sin(Math.toRadians(armInnerAngle-angle))));
     }
 
     public void rotateOuter(double angle) {
-        Rotate rotate = new Rotate(angle, Rotate.Y_AXIS);
+        armOuterAngle += angle;
+        Rotate rotate = new Rotate(armOuterAngle, Rotate.Y_AXIS);
         rotate.pivotXProperty().bind(armOuter.getPivotX());
         rotate.pivotYProperty().bind(armOuter.getPivotY());
         rotate.pivotZProperty().bind(armOuter.getPivotZ());
+        armOuter.getTransforms().clear();
         armOuter.getTransforms().add(rotate);
+
+        // translate effector to match
+        effector.setTranslateX(effector.getTranslateX() + armOuter.getWidth() *
+                (Math.cos(Math.toRadians(armOuterAngle)) - Math.cos(Math.toRadians(armOuterAngle-angle))));
+        effector.setTranslateZ(effector.getTranslateZ() - armOuter.getWidth() *
+                (Math.sin(Math.toRadians(armOuterAngle)) - Math.sin(Math.toRadians(armOuterAngle-angle))));
+    }
+
+    public void moveEffector(double dist) {
+        effector.setTranslateY(effector.getTranslateY() + dist);
     }
 }
