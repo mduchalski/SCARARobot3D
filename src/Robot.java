@@ -15,6 +15,7 @@ public class Robot extends Group {
     Box base;
     Cylinder baseExtension, effector;
     SmoothBox armInner, armOuter;
+    double armInnerAngle;
 
     /**
      * Constructs a robot object based on given set of dimensions.
@@ -48,11 +49,23 @@ public class Robot extends Group {
     }
 
     public void rotateInner(double angle) {
+        // rotate inner arm
         Rotate rotate = new Rotate(angle, Rotate.Y_AXIS);
         rotate.pivotXProperty().bind(armInner.getPivotX());
         rotate.pivotYProperty().bind(armInner.getPivotY());
         rotate.pivotZProperty().bind(armInner.getPivotZ());
         armInner.getTransforms().add(rotate);
+
+        // translate outer arm to match
+        armOuter.getTransforms().add(new Translate(
+                armInner.getWidth() * (Math.cos(Math.toRadians(armInnerAngle+angle))
+                        - Math.cos(Math.toRadians(armInnerAngle))), 0,
+                -armInner.getWidth() * (Math.sin(Math.toRadians(armInnerAngle+angle))
+                        - Math.sin(Math.toRadians(armInnerAngle)))));
+
+        // keep track of the cumulative rotation angle
+        armInnerAngle += angle;
+        System.out.println(armInnerAngle);
     }
 
     public void rotateOuter(double angle) {
