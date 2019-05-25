@@ -1,9 +1,7 @@
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Group;
-import javafx.scene.paint.Material;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
+import javafx.scene.*;
+import javafx.scene.paint.*;
+import javafx.scene.shape.*;
 
 /**
  * This class implements a simple 3D object - a box ending with two cylinders,
