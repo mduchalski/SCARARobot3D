@@ -9,10 +9,10 @@ import javafx.scene.shape.DrawMode;
  * This class implements a simple 3D object - a box ending with two cylinders,
  * as seen below viewed from the top.
  *     = = = = = =
- *   =              =
- *  =                =
- *  =                =
- *   =              =
+ *   =             =
+ *  =               =
+ *  =               =
+ *   =             =
  *     = = = = = =
  */
 public class SmoothBox extends Group {
@@ -67,7 +67,7 @@ public class SmoothBox extends Group {
         return left.translateZProperty();
     }
 
-    public double getWidth() {
+    public double getCentToCent() {
         return mid.getWidth();
     }
 }

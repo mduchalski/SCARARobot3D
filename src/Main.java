@@ -56,29 +56,17 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
-                    case LEFT:
-                        robot.getTransforms().add(new Rotate(-1, Rotate.Y_AXIS));
-                        break;
-                    case RIGHT:
-                        robot.getTransforms().add(new Rotate(1, Rotate.Y_AXIS));
-                        break;
-                    case UP:
-                        robot.getTransforms().add(new Rotate(1, Rotate.X_AXIS));
-                        break;
-                    case DOWN:
-                        robot.getTransforms().add(new Rotate(-1, Rotate.X_AXIS));
-                        break;
                     case Q:
-                        robot.rotateOuter(1);
+                        robot.rotateOuter(0.01);
                         break;
                     case A:
-                        robot.rotateOuter(-1);
+                        robot.rotateOuter(-0.01);
                         break;
                     case W:
-                        robot.rotateInner(1);
+                        robot.rotateInner(0.01);
                         break;
                     case S:
-                        robot.rotateInner(-1);
+                        robot.rotateInner(-0.01);
                         break;
                     case E:
                         robot.moveEffector(0.01);
