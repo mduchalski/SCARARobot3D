@@ -12,6 +12,7 @@ public class Robot extends Group {
     Cylinder baseExtension, effector;
     SmoothBox armInner, armOuter;
     double armInnerAngle, armOuterAngle;
+    Group rotateInnerGroup, rotateOuterGroup;
 
     /**
      * Constructs a Robot object with a given set of dimensions.
@@ -33,6 +34,8 @@ public class Robot extends Group {
                  double effectorRadius, double effectorHeight,
                  Color primaryCol, Color secondaryCol) {
         super();
+        rotateInnerGroup = new Group();
+        rotateOuterGroup = new Group();
         PhongMaterial primary = new PhongMaterial(primaryCol),
                 secondary = new PhongMaterial(secondaryCol);
 
@@ -55,7 +58,9 @@ public class Robot extends Group {
         effector.setTranslateX(armInnerLength + armOuterLength);
         effector.setTranslateY(-baseExtensionHeight);
 
-        getChildren().addAll(base, baseExtension, armInner, armOuter, effector);
+        rotateOuterGroup.getChildren().addAll(armOuter, effector);
+        rotateInnerGroup.getChildren().addAll(armInner, rotateOuterGroup);
+        getChildren().addAll(base, baseExtension, rotateInnerGroup);
     }
 
     /**
@@ -63,18 +68,10 @@ public class Robot extends Group {
      * @param angle rotation angle
      */
     public void rotateInner(double angle) {
-        // rotate inner arm
         armInnerAngle += angle;
-        Rotate rotate = new Rotate(Math.toDegrees(armInnerAngle), Rotate.Y_AXIS);
-        rotate.pivotXProperty().bind(armInner.getPivotX());
-        rotate.pivotYProperty().bind(armInner.getPivotY());
-        rotate.pivotZProperty().bind(armInner.getPivotZ());
-        armInner.getTransforms().clear();
-        armInner.getTransforms().add(rotate);
-
-        // translate outer arm to match
-        matchRotation(armOuter, armInner.getCentToCent(), armInnerAngle, angle);
-        matchRotation(effector, armInner.getCentToCent(), armInnerAngle, angle);
+        rotateInnerGroup.getTransforms().clear();
+        rotateInnerGroup.getTransforms().add(new Rotate(Math.toDegrees(armInnerAngle),
+                Rotate.Y_AXIS));
     }
 
     /**
@@ -83,14 +80,9 @@ public class Robot extends Group {
      */
     public void rotateOuter(double angle) {
         armOuterAngle += angle;
-        Rotate rotate = new Rotate(Math.toDegrees(armOuterAngle), Rotate.Y_AXIS);
-        rotate.pivotXProperty().bind(armOuter.getPivotX());
-        rotate.pivotYProperty().bind(armOuter.getPivotY());
-        rotate.pivotZProperty().bind(armOuter.getPivotZ());
-        armOuter.getTransforms().clear();
-        armOuter.getTransforms().add(rotate);
-
-        matchRotation(effector, armOuter.getCentToCent(), armOuterAngle, angle);
+        rotateOuterGroup.getTransforms().clear();
+        rotateOuterGroup.getTransforms().add(new Rotate(Math.toDegrees(armOuterAngle),
+                armInner.getCentToCent(), 0.0, 0.0, Rotate.Y_AXIS));
     }
 
     /**
@@ -99,20 +91,5 @@ public class Robot extends Group {
      */
     public void moveEffector(double dist) {
         effector.setTranslateY(effector.getTranslateY() + dist);
-    }
-
-    /**
-     * Translates a given node to match another node's rotation.
-     * @param node node to translate
-     * @param radius rotation radius
-     * @param angle angle before rotation
-     * @param angleChange angle change in rotation
-     */
-    private void matchRotation(Node node, double radius,
-                               double angle, double angleChange) {
-        node.setTranslateX(node.getTranslateX() + radius * (Math.cos(angle) -
-                Math.cos(angle-angleChange)));
-        node.setTranslateZ(node.getTranslateZ() - radius * (Math.sin(angle) -
-                Math.sin(angle-angleChange)));
     }
 }

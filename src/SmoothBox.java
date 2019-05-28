@@ -53,18 +53,6 @@ public class SmoothBox extends Group {
         right.setDrawMode(drawMode);
     }
 
-    public DoubleProperty getPivotX() {
-        return left.translateXProperty();
-    }
-
-    public DoubleProperty getPivotY() {
-        return left.translateYProperty();
-    }
-
-    public DoubleProperty getPivotZ() {
-        return left.translateZProperty();
-    }
-
     public double getCentToCent() {
         return mid.getWidth();
     }
