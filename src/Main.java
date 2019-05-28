@@ -37,7 +37,7 @@ public class Main extends Application {
     private Group createContent() {
         // Box
         robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 1.5,
-                Color.DARKGRAY, Color.GREY);
+                0.675, 0.175, Color.DARKGRAY, Color.GREY);
 
         // create and position camera
         Camera camera = new PerspectiveCamera(true);
@@ -150,9 +150,15 @@ public class Main extends Application {
                         robot.rotateInner(-0.015);
                         break;
                     case E:
-                        robot.moveEffector(0.01);
+                        robot.rotateEffector(0.015);
                         break;
                     case D:
+                        robot.rotateEffector(-0.015);
+                        break;
+                    case R:
+                        robot.moveEffector(0.01);
+                        break;
+                    case F:
                         robot.moveEffector(-0.01);
                         break;
                 }

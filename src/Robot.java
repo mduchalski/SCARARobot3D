@@ -8,11 +8,11 @@ import javafx.scene.transform.*;
  * methods for manipulations.
  */
 public class Robot extends Group {
-    Box base;
+    Box base, grabber;
     Cylinder baseExtension, effector;
     SmoothBox armInner, armOuter;
-    double armInnerAngle, armOuterAngle;
-    Group rotateInnerGroup, rotateOuterGroup;
+    double armInnerAngle, armOuterAngle, effectorAngle;
+    Group rotateInnerGroup, rotateOuterGroup, rotateEffectorGroup;
 
     /**
      * Constructs a Robot object with a given set of dimensions.
@@ -32,10 +32,12 @@ public class Robot extends Group {
                  double baseExtensionHeight, double armInnerLength,
                  double armOuterLength, double armHeight, double armDepth,
                  double effectorRadius, double effectorHeight,
+                 double grabberSide, double grabberHeight,
                  Color primaryCol, Color secondaryCol) {
         super();
         rotateInnerGroup = new Group();
         rotateOuterGroup = new Group();
+        rotateEffectorGroup = new Group();
         PhongMaterial primary = new PhongMaterial(primaryCol),
                 secondary = new PhongMaterial(secondaryCol);
 
@@ -57,8 +59,13 @@ public class Robot extends Group {
         effector.setMaterial(secondary); effector.setDrawMode(DrawMode.FILL);
         effector.setTranslateX(armInnerLength + armOuterLength);
         effector.setTranslateY(-baseExtensionHeight);
+        grabber = new Box(grabberSide, grabberHeight, grabberSide);
+        grabber.setMaterial(primary); grabber.setDrawMode(DrawMode.FILL);
+        grabber.setTranslateX(armInnerLength + armOuterLength);
+        grabber.setTranslateY(-baseExtensionHeight + effectorHeight/2.0);
 
-        rotateOuterGroup.getChildren().addAll(armOuter, effector);
+        rotateEffectorGroup.getChildren().addAll(effector, grabber);
+        rotateOuterGroup.getChildren().addAll(armOuter, rotateEffectorGroup);
         rotateInnerGroup.getChildren().addAll(armInner, rotateOuterGroup);
         getChildren().addAll(base, baseExtension, rotateInnerGroup);
     }
@@ -86,10 +93,22 @@ public class Robot extends Group {
     }
 
     /**
+     * Rotates the outer arm.
+     * @param angle rotation angle
+     */
+    public void rotateEffector(double angle) {
+        effectorAngle += angle;
+        rotateEffectorGroup.getTransforms().clear();
+        rotateEffectorGroup.getTransforms().add(new Rotate(Math.toDegrees(effectorAngle),
+                armInner.getCentToCent() + armOuter.getCentToCent(),
+                0.0, 0.0, Rotate.Y_AXIS));
+    }
+
+    /**
      * Moves the effector up or down.
      * @param dist distance (+/-) to move the effector
      */
     public void moveEffector(double dist) {
-        effector.setTranslateY(effector.getTranslateY() + dist);
+        rotateEffectorGroup.setTranslateY(rotateEffectorGroup.getTranslateY() + dist);
     }
 }
