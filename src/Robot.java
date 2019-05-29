@@ -1,3 +1,4 @@
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
@@ -8,11 +9,8 @@ import javafx.scene.transform.*;
  * methods for manipulations.
  */
 public class Robot extends Group {
-    Box base, grabber;
-    Cylinder baseExtension, effector;
-    SmoothBox armInner, armOuter;
-    double armInnerAngle, armOuterAngle, effectorAngle;
-    Group rotateInnerGroup, rotateOuterGroup, rotateEffectorGroup;
+    Rotate rotateInnerTr, rotateOuterTr, rotateEffectorTr;
+    Group rotateEffectorGroup;
 
     /**
      * Constructs a Robot object with a given set of dimensions.
@@ -35,34 +33,42 @@ public class Robot extends Group {
                  double grabberSide, double grabberHeight,
                  Color primaryCol, Color secondaryCol) {
         super();
-        rotateInnerGroup = new Group();
-        rotateOuterGroup = new Group();
+        Group rotateInnerGroup = new Group();
+        Group rotateOuterGroup = new Group();
         rotateEffectorGroup = new Group();
         PhongMaterial primary = new PhongMaterial(primaryCol),
                 secondary = new PhongMaterial(secondaryCol);
 
-        base = new Box(baseSide, baseHeight, baseSide);
+        Box base = new Box(baseSide, baseHeight, baseSide);
         base.setMaterial(secondary); base.setDrawMode(DrawMode.FILL);
-        baseExtension = new Cylinder(armDepth / 2.0, baseExtensionHeight);
+        Cylinder baseExtension = new Cylinder(armDepth / 2.0, baseExtensionHeight);
         baseExtension.setTranslateY(-baseExtensionHeight / 2.0);
         baseExtension.setMaterial(primary); baseExtension.setDrawMode(DrawMode.FILL);
-        armInner = new SmoothBox(armInnerLength, armHeight, armDepth);
+        SmoothBox armInner = new SmoothBox(armInnerLength, armHeight, armDepth);
         armInner.setMaterial(secondary); armInner.setDrawMode(DrawMode.FILL);
         armInner.setTranslateX(armInnerLength / 2.0);
         armInner.setTranslateY(-baseExtensionHeight - armHeight/2.0);
-        armOuter = new SmoothBox(armOuterLength, armHeight, armDepth);
+        SmoothBox armOuter = new SmoothBox(armOuterLength, armHeight, armDepth);
         armOuter.setMaterial(primary); armOuter.setDrawMode(DrawMode.FILL);
         armOuter.setTranslateX(armInnerLength + armOuterLength/2.0);
         armOuter.setTranslateY(-baseExtensionHeight + armHeight/2.0);
-        armOuterAngle = armInnerAngle = 0.0;
-        effector = new Cylinder(effectorRadius, effectorHeight);
+        Cylinder effector = new Cylinder(effectorRadius, effectorHeight);
         effector.setMaterial(secondary); effector.setDrawMode(DrawMode.FILL);
         effector.setTranslateX(armInnerLength + armOuterLength);
         effector.setTranslateY(-baseExtensionHeight);
-        grabber = new Box(grabberSide, grabberHeight, grabberSide);
+        Box grabber = new Box(grabberSide, grabberHeight, grabberSide);
         grabber.setMaterial(primary); grabber.setDrawMode(DrawMode.FILL);
         grabber.setTranslateX(armInnerLength + armOuterLength);
         grabber.setTranslateY(-baseExtensionHeight + effectorHeight/2.0);
+
+        rotateInnerTr = new Rotate(0.0, Rotate.Y_AXIS);
+        rotateInnerGroup.getTransforms().add(rotateInnerTr);
+        rotateOuterTr = new Rotate(0.0, armInner.getCentToCent(),
+                0.0, 0.0, Rotate.Y_AXIS);
+        rotateOuterGroup.getTransforms().add(rotateOuterTr);
+        rotateEffectorTr = new Rotate(0.0, armInner.getCentToCent() +
+                armOuter.getCentToCent(), 0.0, 0.0, Rotate.Y_AXIS);
+        rotateEffectorGroup.getTransforms().add(rotateEffectorTr);
 
         rotateEffectorGroup.getChildren().addAll(effector, grabber);
         rotateOuterGroup.getChildren().addAll(armOuter, rotateEffectorGroup);
@@ -75,10 +81,7 @@ public class Robot extends Group {
      * @param angle rotation angle
      */
     public void rotateInner(double angle) {
-        armInnerAngle += angle;
-        rotateInnerGroup.getTransforms().clear();
-        rotateInnerGroup.getTransforms().add(new Rotate(Math.toDegrees(armInnerAngle),
-                Rotate.Y_AXIS));
+        rotateInnerTr.setAngle(rotateInnerTr.getAngle() + angle);
     }
 
     /**
@@ -86,10 +89,7 @@ public class Robot extends Group {
      * @param angle rotation angle
      */
     public void rotateOuter(double angle) {
-        armOuterAngle += angle;
-        rotateOuterGroup.getTransforms().clear();
-        rotateOuterGroup.getTransforms().add(new Rotate(Math.toDegrees(armOuterAngle),
-                armInner.getCentToCent(), 0.0, 0.0, Rotate.Y_AXIS));
+        rotateOuterTr.setAngle(rotateOuterTr.getAngle() + angle);
     }
 
     /**
@@ -97,11 +97,7 @@ public class Robot extends Group {
      * @param angle rotation angle
      */
     public void rotateEffector(double angle) {
-        effectorAngle += angle;
-        rotateEffectorGroup.getTransforms().clear();
-        rotateEffectorGroup.getTransforms().add(new Rotate(Math.toDegrees(effectorAngle),
-                armInner.getCentToCent() + armOuter.getCentToCent(),
-                0.0, 0.0, Rotate.Y_AXIS));
+        rotateEffectorTr.setAngle(rotateEffectorTr.getAngle() + angle);
     }
 
     /**

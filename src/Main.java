@@ -1,6 +1,9 @@
+import javafx.animation.*;
 import javafx.application.*;
 import javafx.event.*;
 import javafx.geometry.*;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -8,12 +11,14 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.transform.*;
+import javafx.util.Duration;
 
 /**
  * Main class.
  */
 public class Main extends Application {
     Robot robot;
+    Camera camera;
 
     /**
      * Initializes JavaFX application
@@ -35,12 +40,18 @@ public class Main extends Application {
      * @return group with 3D content, a Group object
      */
     private Group createContent() {
-        // Box
+        // robot
         robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 1.5,
                 0.675, 0.175, Color.DARKGRAY, Color.GREY);
 
+        // floor
+        Box floor = new Box(8.0, 0.1, 8.0);
+        floor.setMaterial(new PhongMaterial(Color.WHITE));
+        floor.setDrawMode(DrawMode.FILL);
+        floor.setTranslateY(0.1);
+
         // create and position camera
-        Camera camera = new PerspectiveCamera(true);
+        camera = new PerspectiveCamera(true);
         camera.getTransforms().addAll (
                 new Rotate(-20, Rotate.Y_AXIS),
                 new Rotate(-20, Rotate.X_AXIS),
@@ -55,7 +66,7 @@ public class Main extends Application {
 
         // build the Scene Graph
         Group root = new Group();
-        root.getChildren().addAll(camera, robot, pLight, aLight);
+        root.getChildren().addAll(camera, robot, floor, pLight, aLight);
 
         // Use a SubScene
         SubScene subScene = new SubScene(root, 500,500, true, SceneAntialiasing.BALANCED);
@@ -138,22 +149,22 @@ public class Main extends Application {
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
                     case Q:
-                        robot.rotateOuter(0.015);
+                        robot.rotateOuter(1);
                         break;
                     case A:
-                        robot.rotateOuter(-0.015);
+                        robot.rotateOuter(-1);
                         break;
                     case W:
-                        robot.rotateInner(0.015);
+                        robot.rotateInner(1);
                         break;
                     case S:
-                        robot.rotateInner(-0.015);
+                        robot.rotateInner(-1);
                         break;
                     case E:
-                        robot.rotateEffector(0.015);
+                        robot.rotateEffector(1);
                         break;
                     case D:
-                        robot.rotateEffector(-0.015);
+                        robot.rotateEffector(-1);
                         break;
                     case R:
                         robot.moveEffector(0.01);
