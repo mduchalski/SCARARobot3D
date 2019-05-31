@@ -1,4 +1,3 @@
-import javafx.animation.*;
 import javafx.application.*;
 import javafx.event.*;
 import javafx.geometry.*;
@@ -11,7 +10,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.transform.*;
-import javafx.util.Duration;
 
 /**
  * Main class.
@@ -19,6 +17,7 @@ import javafx.util.Duration;
 public class Main extends Application {
     Robot robot;
     Camera camera;
+    Box box;
 
     /**
      * Initializes JavaFX application
@@ -41,14 +40,22 @@ public class Main extends Application {
      */
     private Group createContent() {
         // robot
-        robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 1.5,
-                0.675, 0.175, Color.DARKGRAY, Color.GREY);
+        robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 2.0,
+                0.675, 0.175, 120, 0.5, Color.DARKGRAY, Color.GREY);
 
         // floor
         Box floor = new Box(8.0, 0.1, 8.0);
         floor.setMaterial(new PhongMaterial(Color.WHITE));
         floor.setDrawMode(DrawMode.FILL);
         floor.setTranslateY(0.1);
+
+
+        box = new Box(1, 1, 1);
+        box.setMaterial(new PhongMaterial(Color.BLUE));
+        box.setDrawMode(DrawMode.FILL);
+        box.setTranslateX(1.5);
+        box.setTranslateZ(1.5);
+        box.setTranslateY(-0.25);
 
         // create and position camera
         camera = new PerspectiveCamera(true);
@@ -66,7 +73,7 @@ public class Main extends Application {
 
         // build the Scene Graph
         Group root = new Group();
-        root.getChildren().addAll(camera, robot, floor, pLight, aLight);
+        root.getChildren().addAll(camera, robot, floor, box, pLight, aLight);
 
         // Use a SubScene
         SubScene subScene = new SubScene(root, 500,500, true, SceneAntialiasing.BALANCED);
@@ -147,34 +154,41 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case Q:
-                        robot.rotateOuter(1);
-                        break;
-                    case A:
-                        robot.rotateOuter(-1);
-                        break;
-                    case W:
-                        robot.rotateInner(1);
-                        break;
-                    case S:
-                        robot.rotateInner(-1);
-                        break;
-                    case E:
-                        robot.rotateEffector(1);
-                        break;
-                    case D:
-                        robot.rotateEffector(-1);
-                        break;
-                    case R:
-                        robot.moveEffector(0.01);
-                        break;
-                    case F:
-                        robot.moveEffector(-0.01);
-                        break;
-                }
+                performMoveFromKeyboard(event, 1.0);
+                // undo move if new position not legal
+                if (!robot.isPositionLegal(box))
+                    performMoveFromKeyboard(event, -1.0);
             }
         });
+    }
+
+    private void performMoveFromKeyboard(KeyEvent event, double mult) {
+        switch (event.getCode()) {
+            case Q:
+                robot.rotateOuter(mult * 1);
+                break;
+            case A:
+                robot.rotateOuter(mult * -1);
+                break;
+            case W:
+                robot.rotateInner(mult * 1);
+                break;
+            case S:
+                robot.rotateInner(mult * -1);
+                break;
+            case E:
+                robot.rotateEffector(mult * 1);
+                break;
+            case D:
+                robot.rotateEffector(mult * -1);
+                break;
+            case R:
+                robot.moveEffector(mult * 0.01);
+                break;
+            case F:
+                robot.moveEffector(mult * -0.01);
+                break;
+        }
     }
 
     /**

@@ -1,4 +1,5 @@
-import javafx.beans.property.DoubleProperty;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
@@ -11,6 +12,7 @@ import javafx.scene.transform.*;
 public class Robot extends Group {
     Rotate rotateInnerTr, rotateOuterTr, rotateEffectorTr;
     Group rotateEffectorGroup;
+    double maxOuterAngle, maxEffectorMove;
 
     /**
      * Constructs a Robot object with a given set of dimensions.
@@ -31,6 +33,7 @@ public class Robot extends Group {
                  double armOuterLength, double armHeight, double armDepth,
                  double effectorRadius, double effectorHeight,
                  double grabberSide, double grabberHeight,
+                 double _maxOuterAngle, double _maxEffectorMove,
                  Color primaryCol, Color secondaryCol) {
         super();
         Group rotateInnerGroup = new Group();
@@ -74,6 +77,9 @@ public class Robot extends Group {
         rotateOuterGroup.getChildren().addAll(armOuter, rotateEffectorGroup);
         rotateInnerGroup.getChildren().addAll(armInner, rotateOuterGroup);
         getChildren().addAll(base, baseExtension, rotateInnerGroup);
+
+        maxOuterAngle = _maxOuterAngle;
+        maxEffectorMove = _maxEffectorMove;
     }
 
     /**
@@ -106,5 +112,12 @@ public class Robot extends Group {
      */
     public void moveEffector(double dist) {
         rotateEffectorGroup.setTranslateY(rotateEffectorGroup.getTranslateY() + dist);
+    }
+
+    public boolean isPositionLegal(Box box) {
+        return !rotateEffectorGroup.localToScene(rotateEffectorGroup.getBoundsInLocal())
+                .intersects(box.localToScene(box.getBoundsInLocal())) &&
+                Math.abs(rotateOuterTr.getAngle()) < maxOuterAngle &&
+                Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
     }
 }

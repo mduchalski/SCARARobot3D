@@ -1,4 +1,3 @@
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
