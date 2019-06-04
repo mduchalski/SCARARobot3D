@@ -1,9 +1,15 @@
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.transform.*;
+import javafx.util.Duration;
 
 import static javafx.scene.shape.DrawMode.FILL;
 
@@ -127,14 +133,54 @@ public class Robot extends Group {
                 Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
     }
 
-    public void attemptGrabLaydown(Box box) {
-        box.setVisible(false);
-        grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
-        grabbedBox.setMaterial(box.getMaterial());
-        grabbedBox.setDrawMode(FILL);
-        grabbedBox.setTranslateX(grabber.getTranslateX());
-        grabbedBox.setTranslateY(grabber.getTranslateY() +
-                (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
-        rotateEffectorGroup.getChildren().add(grabbedBox);
+    public void attemptGrabLaydown(Box box, Rotate boxRotate, Box floor) {
+        if (grabbedBox == null && canGrab(box)) {
+            box.setVisible(false);
+            grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
+            grabbedBox.setMaterial(box.getMaterial());
+            grabbedBox.setDrawMode(FILL);
+            grabbedBox.setTranslateX(grabber.getTranslateX());
+            grabbedBox.setTranslateY(grabber.getTranslateY() +
+                    (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
+            rotateEffectorGroup.getChildren().add(grabbedBox);
+        }
+        else if (grabbedBox != null) { // to-do: correct angle
+            Point3D grabberPos = grabber.localToScene(0, 0, 0);
+            box.setTranslateX(grabberPos.getX());
+            box.setTranslateY(grabberPos.getY() + grabber.getHeight()/2.0 + box.getHeight()/2.0);
+            box.setTranslateZ(grabberPos.getZ());
+            boxRotate.setAngle(getGrabberAngle());
+            animateFall(box, floor);
+            System.out.println(getGrabberAngle());
+            box.setVisible(true);
+            rotateEffectorGroup.getChildren().remove(grabbedBox);
+            grabbedBox = null;
+        }
+    }
+
+    private void animateFall(Box box, Box floor) {
+        final Timeline fallAnimation = new Timeline();
+        fallAnimation.setCycleCount(1);
+        fallAnimation.setAutoReverse(false);
+        Interpolator gravity = new Interpolator() {
+            @Override
+            protected double curve(double t) {
+                return t*t;
+            }
+        };
+        fallAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(
+                750.0 * Math.sqrt(rotateEffectorGroup.getTranslateX() + maxEffectorMove)),
+                new KeyValue(box.translateYProperty(),
+                        -floor.getHeight() - box.getHeight()/2.0, gravity)));
+        fallAnimation.play();
+    }
+
+    private boolean canGrab(Box box) { // to-do: angles
+        return box.localToScene(0.0, -box.getHeight() / 2.0, 0.0).distance(
+                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.5;
+    }
+
+    public double getGrabberAngle() {
+        return rotateEffectorTr.getAngle() + rotateInnerTr.getAngle() + rotateOuterTr.getAngle();
     }
 }

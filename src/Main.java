@@ -21,6 +21,7 @@ public class Main extends Application {
     Robot robot;
     Camera camera;
     Box box, floor;
+    Rotate boxRotate;
 
     /**
      * Initializes JavaFX application
@@ -52,13 +53,13 @@ public class Main extends Application {
         floor.setDrawMode(DrawMode.FILL);
         floor.setTranslateY(0.1);
 
-
         box = new Box(0.675, 0.675, 0.675);
         box.setMaterial(new PhongMaterial(Color.BLUE));
         box.setDrawMode(DrawMode.FILL);
-        box.setTranslateX(1.5);
-        box.setTranslateZ(1.5);
+        box.setTranslateX(2.75);
         box.setTranslateY(-0.25);
+        boxRotate = new Rotate(0, Rotate.Y_AXIS);
+        box.getTransforms().add(boxRotate);
 
         // create and position camera
         camera = new PerspectiveCamera(true);
@@ -157,8 +158,9 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                System.out.println(robot.getGrabberAngle());
                 if (event.getCode() == SPACE) // box grab/lay down
-                    robot.attemptGrabLaydown(box);
+                    robot.attemptGrabLaydown(box, boxRotate, floor);
                 else { // regular move
                     performMoveFromKeyboard(event, 1.0);
                     // undo move if new position not legal
