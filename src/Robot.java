@@ -5,6 +5,8 @@ import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.transform.*;
 
+import static javafx.scene.shape.DrawMode.FILL;
+
 /**
  * This class encapsulates all robotic arm components and implements relevant
  * methods for manipulations.
@@ -12,6 +14,7 @@ import javafx.scene.transform.*;
 public class Robot extends Group {
     Rotate rotateInnerTr, rotateOuterTr, rotateEffectorTr;
     Group rotateEffectorGroup;
+    Box grabber, grabbedBox;
     double maxOuterAngle, maxEffectorMove;
 
     /**
@@ -43,24 +46,24 @@ public class Robot extends Group {
                 secondary = new PhongMaterial(secondaryCol);
 
         Box base = new Box(baseSide, baseHeight, baseSide);
-        base.setMaterial(secondary); base.setDrawMode(DrawMode.FILL);
+        base.setMaterial(secondary); base.setDrawMode(FILL);
         Cylinder baseExtension = new Cylinder(armDepth / 2.0, baseExtensionHeight);
         baseExtension.setTranslateY(-baseExtensionHeight / 2.0);
-        baseExtension.setMaterial(primary); baseExtension.setDrawMode(DrawMode.FILL);
+        baseExtension.setMaterial(primary); baseExtension.setDrawMode(FILL);
         SmoothBox armInner = new SmoothBox(armInnerLength, armHeight, armDepth);
-        armInner.setMaterial(secondary); armInner.setDrawMode(DrawMode.FILL);
+        armInner.setMaterial(secondary); armInner.setDrawMode(FILL);
         armInner.setTranslateX(armInnerLength / 2.0);
         armInner.setTranslateY(-baseExtensionHeight - armHeight/2.0);
         SmoothBox armOuter = new SmoothBox(armOuterLength, armHeight, armDepth);
-        armOuter.setMaterial(primary); armOuter.setDrawMode(DrawMode.FILL);
+        armOuter.setMaterial(primary); armOuter.setDrawMode(FILL);
         armOuter.setTranslateX(armInnerLength + armOuterLength/2.0);
         armOuter.setTranslateY(-baseExtensionHeight + armHeight/2.0);
         Cylinder effector = new Cylinder(effectorRadius, effectorHeight);
-        effector.setMaterial(secondary); effector.setDrawMode(DrawMode.FILL);
+        effector.setMaterial(secondary); effector.setDrawMode(FILL);
         effector.setTranslateX(armInnerLength + armOuterLength);
         effector.setTranslateY(-baseExtensionHeight);
-        Box grabber = new Box(grabberSide, grabberHeight, grabberSide);
-        grabber.setMaterial(primary); grabber.setDrawMode(DrawMode.FILL);
+        grabber = new Box(grabberSide, grabberHeight, grabberSide);
+        grabber.setMaterial(primary); grabber.setDrawMode(FILL);
         grabber.setTranslateX(armInnerLength + armOuterLength);
         grabber.setTranslateY(-baseExtensionHeight + effectorHeight/2.0);
 
@@ -80,6 +83,7 @@ public class Robot extends Group {
 
         maxOuterAngle = _maxOuterAngle;
         maxEffectorMove = _maxEffectorMove;
+        grabbedBox = null;
     }
 
     /**
@@ -114,10 +118,23 @@ public class Robot extends Group {
         rotateEffectorGroup.setTranslateY(rotateEffectorGroup.getTranslateY() + dist);
     }
 
-    public boolean isPositionLegal(Box box) {
-        return !rotateEffectorGroup.localToScene(rotateEffectorGroup.getBoundsInLocal())
-                .intersects(box.localToScene(box.getBoundsInLocal())) &&
+    public boolean isPositionLegal(Box box, Box floor) {
+        return  ((grabbedBox ==  null && !grabber.localToScene(grabber.getBoundsInLocal())
+                        .intersects(box.localToScene(box.getBoundsInLocal()))) ||
+                (grabbedBox != null && !grabbedBox.localToScene(grabbedBox.getBoundsInLocal())
+                        .intersects(floor.localToScene(floor.getBoundsInLocal())))) &&
                 Math.abs(rotateOuterTr.getAngle()) < maxOuterAngle &&
                 Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
+    }
+
+    public void attemptGrabLaydown(Box box) {
+        box.setVisible(false);
+        grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
+        grabbedBox.setMaterial(box.getMaterial());
+        grabbedBox.setDrawMode(FILL);
+        grabbedBox.setTranslateX(grabber.getTranslateX());
+        grabbedBox.setTranslateY(grabber.getTranslateY() +
+                (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
+        rotateEffectorGroup.getChildren().add(grabbedBox);
     }
 }

@@ -11,13 +11,16 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.transform.*;
 
+import static javafx.scene.input.KeyCode.Q;
+import static javafx.scene.input.KeyCode.SPACE;
+
 /**
  * Main class.
  */
 public class Main extends Application {
     Robot robot;
     Camera camera;
-    Box box;
+    Box box, floor;
 
     /**
      * Initializes JavaFX application
@@ -44,13 +47,13 @@ public class Main extends Application {
                 0.675, 0.175, 120, 0.5, Color.DARKGRAY, Color.GREY);
 
         // floor
-        Box floor = new Box(8.0, 0.1, 8.0);
+        floor = new Box(8.0, 0.1, 8.0);
         floor.setMaterial(new PhongMaterial(Color.WHITE));
         floor.setDrawMode(DrawMode.FILL);
         floor.setTranslateY(0.1);
 
 
-        box = new Box(1, 1, 1);
+        box = new Box(0.675, 0.675, 0.675);
         box.setMaterial(new PhongMaterial(Color.BLUE));
         box.setDrawMode(DrawMode.FILL);
         box.setTranslateX(1.5);
@@ -154,10 +157,14 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                performMoveFromKeyboard(event, 1.0);
-                // undo move if new position not legal
-                if (!robot.isPositionLegal(box))
-                    performMoveFromKeyboard(event, -1.0);
+                if (event.getCode() == SPACE) // box grab/lay down
+                    robot.attemptGrabLaydown(box);
+                else { // regular move
+                    performMoveFromKeyboard(event, 1.0);
+                    // undo move if new position not legal
+                    if (!robot.isPositionLegal(box, floor))
+                        performMoveFromKeyboard(event, -1.0);
+                }
             }
         });
     }
