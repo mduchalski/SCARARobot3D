@@ -2,8 +2,9 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
+import javafx.beans.property.DoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.paint.*;
@@ -124,6 +125,22 @@ public class Robot extends Group {
         rotateEffectorGroup.setTranslateY(rotateEffectorGroup.getTranslateY() + dist);
     }
 
+    public DoubleProperty innerAngleProperty() {
+        return rotateInnerTr.angleProperty();
+    }
+
+    public DoubleProperty outerAngleProperty() {
+        return rotateOuterTr.angleProperty();
+    }
+
+    public DoubleProperty effectorAngleProperty() {
+        return rotateEffectorTr.angleProperty();
+    }
+
+    public DoubleProperty effectorPosProperty() {
+        return rotateEffectorGroup.translateYProperty();
+    }
+
     public boolean isPositionLegal(Box box, Box floor) {
         return  ((grabbedBox ==  null && !grabber.localToScene(grabber.getBoundsInLocal())
                         .intersects(box.localToScene(box.getBoundsInLocal()))) ||
@@ -133,7 +150,8 @@ public class Robot extends Group {
                 Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
     }
 
-    public void attemptGrabLaydown(Box box, Rotate boxRotate, Box floor) {
+    public void attemptGrabLaydown(Robot robot, Box box, Rotate boxRotate,
+                                   Box floor, Recorder recorder) {
         if (grabbedBox == null && canGrab(box)) {
             box.setVisible(false);
             grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
@@ -150,7 +168,7 @@ public class Robot extends Group {
             box.setTranslateY(grabberPos.getY() + grabber.getHeight()/2.0 + box.getHeight()/2.0);
             box.setTranslateZ(grabberPos.getZ());
             boxRotate.setAngle(getGrabberAngle());
-            animateFall(box, floor);
+            animateFall(robot, box, boxRotate, floor, recorder);
             System.out.println(getGrabberAngle());
             box.setVisible(true);
             rotateEffectorGroup.getChildren().remove(grabbedBox);
@@ -158,7 +176,8 @@ public class Robot extends Group {
         }
     }
 
-    private void animateFall(Box box, Box floor) {
+    private void animateFall(Robot robot, Box box, Rotate boxRotate,
+                             Box floor, Recorder recorder) {
         final Timeline fallAnimation = new Timeline();
         fallAnimation.setCycleCount(1);
         fallAnimation.setAutoReverse(false);
@@ -172,6 +191,14 @@ public class Robot extends Group {
                 750.0 * Math.sqrt(rotateEffectorGroup.getTranslateX() + maxEffectorMove)),
                 new KeyValue(box.translateYProperty(),
                         -floor.getHeight() - box.getHeight()/2.0, gravity)));
+        if (recorder != null) // signified automatic operation
+            fallAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    recorder.play(robot, box, boxRotate, floor);
+                }
+            });
+
         fallAnimation.play();
     }
 

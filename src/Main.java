@@ -11,13 +11,13 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.transform.*;
 
-import static javafx.scene.input.KeyCode.Q;
-import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCode.*;
 
 /**
  * Main class.
  */
 public class Main extends Application {
+    Recorder recorder;
     Robot robot;
     Camera camera;
     Box box, floor;
@@ -43,9 +43,14 @@ public class Main extends Application {
      * @return group with 3D content, a Group object
      */
     private Group createContent() {
+
+
         // robot
         robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 2.0,
                 0.675, 0.175, 120, 0.5, Color.DARKGRAY, Color.GREY);
+
+        // recorder
+        recorder = new Recorder();
 
         // floor
         floor = new Box(8.0, 0.1, 8.0);
@@ -102,9 +107,6 @@ public class Main extends Application {
         // controls initialization
         Label robotSettingsText = new Label("Sterowanie robotem");
         Label innerAngleLabel = new Label("Kąt ramienia wewn. [st.]:");
-        Slider slider = new Slider();
-        slider.setShowTickMarks(true);
-        slider.setShowTickLabels(true);
         TextField innerAngleField = new TextField();
         innerAngleField.setPrefWidth(40.0);
         Label outerAngleLabel = new Label("Kąt ramienia zewn. [st.]:");
@@ -120,26 +122,46 @@ public class Main extends Application {
         Button reset = new Button("Resetuj");
         Label recordLabel = new Label("Nagrywanie ruchów");
         Button record = new Button("Nagrywaj");
-        Button playPause = new Button("Odtwarzaj");
+        Button play = new Button("Odtwarzaj");
         Button stop = new Button("Zatrzymaj");
+
+        // to-do: reorginize
+        record.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.startRecording(robot, box);
+            }
+        });
+        play.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.play(robot, box, boxRotate, floor);
+            }
+        });
+        stop.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.stopAll();
+            }
+        });
+
 
         // adding controls to GridPane
         controls.add(robotSettingsText, 0, 0, 3, 1);
-        controls.add(slider, 0, 1, 3, 1);
-        controls.add(innerAngleLabel, 0, 2, 2, 1);
-        controls.add(innerAngleField, 2, 2, 1, 1);
-        controls.add(outerAngleLabel, 0, 3, 2, 1);
-        controls.add(outerAngleField, 2, 3, 1, 1);
-        controls.add(effectorAngleLabel, 0, 4, 2, 1);
-        controls.add(effectorAngleField, 2, 4, 1, 1);
-        controls.add(effectorPosLabel, 0, 5, 2, 1);
-        controls.add(effectorPosField, 2, 5, 1, 1);
-        controls.add(reset, 1, 6, 1, 1);
-        controls.add(set, 2, 6, 1, 1);
-        controls.add(recordLabel, 0, 7, 3, 1);
-        controls.add(record, 0, 8, 1, 1);
-        controls.add(playPause, 1, 8, 1, 1);
-        controls.add(stop, 2, 8, 1, 1);
+        controls.add(innerAngleLabel, 0, 1, 2, 1);
+        controls.add(innerAngleField, 2, 1, 1, 1);
+        controls.add(outerAngleLabel, 0, 2, 2, 1);
+        controls.add(outerAngleField, 2, 2, 1, 1);
+        controls.add(effectorAngleLabel, 0, 3, 2, 1);
+        controls.add(effectorAngleField, 2, 3, 1, 1);
+        controls.add(effectorPosLabel, 0, 4, 2, 1);
+        controls.add(effectorPosField, 2, 4, 1, 1);
+        controls.add(reset, 1, 5, 1, 1);
+        controls.add(set, 2, 5, 1, 1);
+        controls.add(recordLabel, 0, 6, 3, 1);
+        controls.add(record, 0, 7, 1, 1);
+        controls.add(play, 1, 7, 1, 1);
+        controls.add(stop, 2, 7, 1, 1);
 
         // alignment corrections
         GridPane.setHalignment(robotSettingsText, HPos.CENTER);
@@ -155,12 +177,30 @@ public class Main extends Application {
      * @param scene active scene
      */
     private void handleKeyboard(Scene scene) {
+        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (recorder.isRecording()) {
+                    if (event.getCode() == Q || event.getCode() == A)
+                        recorder.addPos(robot.outerAngleProperty());
+                    else if (event.getCode() == W || event.getCode() == S)
+                        recorder.addPos(robot.innerAngleProperty());
+                    else if (event.getCode() == E || event.getCode() == D)
+                        recorder.addPos(robot.effectorAngleProperty());
+                    else if (event.getCode() == R || event.getCode() == F)
+                        recorder.addPos(robot.effectorPosProperty());
+                }
+            }
+        });
+
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 System.out.println(robot.getGrabberAngle());
-                if (event.getCode() == SPACE) // box grab/lay down
-                    robot.attemptGrabLaydown(box, boxRotate, floor);
+                if (event.getCode() == G) { // box grab/lay down
+                    robot.attemptGrabLaydown(robot, box, boxRotate, floor, null);
+                    if (recorder.isRecording()) recorder.addPos(null); // signifies grab/lay down attempt
+                }
                 else { // regular move
                     performMoveFromKeyboard(event, 1.0);
                     // undo move if new position not legal
