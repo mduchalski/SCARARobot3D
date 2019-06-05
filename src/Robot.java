@@ -161,6 +161,7 @@ public class Robot extends Group {
             grabbedBox.setTranslateY(grabber.getTranslateY() +
                     (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
             rotateEffectorGroup.getChildren().add(grabbedBox);
+            if (recorder != null) recorder.play(robot, box, boxRotate, floor);
         }
         else if (grabbedBox != null) { // to-do: correct angle
             Point3D grabberPos = grabber.localToScene(0, 0, 0);

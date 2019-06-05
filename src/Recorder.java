@@ -17,7 +17,7 @@ import java.util.Queue;
 public class Recorder {
     Queue<DoublePropertyTarget> positions;
     boolean isRecording, isPlaying;
-    Box startBox;
+    double initialBoxTranslateX, initialBoxTranslateZ, initialBoxRotateAngle;
 
     public Recorder() {
         positions = new LinkedList<>();
@@ -25,25 +25,34 @@ public class Recorder {
         isPlaying = false;
     }
 
-    public void startRecording(Robot robot, Box _startBox) {
+    public void startRecording(Robot robot, Box box, Rotate boxRotate) {
         if (!isPlaying) {
             isRecording = true;
             addPos(robot.outerAngleProperty());
             addPos(robot.innerAngleProperty());
             addPos(robot.effectorAngleProperty());
             addPos(robot.effectorPosProperty());
-            startBox = _startBox;
+            initialBoxTranslateX = box.getTranslateX();
+            initialBoxTranslateZ = box.getTranslateZ();
+            initialBoxRotateAngle = boxRotate.getAngle();
         }
     }
 
     public void play(Robot robot, Box box, Rotate boxRotate, Box floor) {
-        isPlaying = true;
+        if (!isPlaying) {
+            box.setTranslateX(initialBoxTranslateX);
+            box.setTranslateZ(initialBoxTranslateZ);
+            boxRotate.setAngle(initialBoxRotateAngle);
+            isPlaying = true;
+        }
+
         if (positions.isEmpty()) {
             isPlaying = false;
             return;
         }
 
         if (positions.peek() == null) {
+            positions.poll();
             robot.attemptGrabLaydown(robot, box, boxRotate, floor, this);
             return;
         }

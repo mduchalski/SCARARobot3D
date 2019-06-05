@@ -129,7 +129,7 @@ public class Main extends Application {
         record.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                recorder.startRecording(robot, box);
+                recorder.startRecording(robot, box, boxRotate);
             }
         });
         play.setOnAction(new EventHandler<ActionEvent>() {
@@ -196,7 +196,6 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                System.out.println(robot.getGrabberAngle());
                 if (event.getCode() == G) { // box grab/lay down
                     robot.attemptGrabLaydown(robot, box, boxRotate, floor, null);
                     if (recorder.isRecording()) recorder.addPos(null); // signifies grab/lay down attempt
