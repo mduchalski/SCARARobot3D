@@ -21,7 +21,11 @@ public class Main extends Application {
     Robot robot;
     Camera camera;
     Box box, floor;
-    Rotate boxRotate;
+
+    Rotate boxRotate, cameraXRotate, cameraYRotate;
+    Translate cameraTranslate;
+
+    double mousePosX, mousePosY, mouseOldX, mouseOldY;
 
     /**
      * Initializes JavaFX application
@@ -34,6 +38,7 @@ public class Main extends Application {
         HBox layout = new HBox(createControls(), createContent());
         Scene scene = new Scene(layout);
         handleKeyboard(scene);
+        handleMouse(scene);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -43,8 +48,6 @@ public class Main extends Application {
      * @return group with 3D content, a Group object
      */
     private Group createContent() {
-
-
         // robot
         robot = new Robot(1.0, 0.25, 2.0, 1.5, 1.25, 0.25, 0.5, 0.125, 2.0,
                 0.675, 0.175, 120, 0.5, Color.DARKGRAY, Color.GREY);
@@ -68,10 +71,10 @@ public class Main extends Application {
 
         // create and position camera
         camera = new PerspectiveCamera(true);
-        camera.getTransforms().addAll (
-                new Rotate(-20, Rotate.Y_AXIS),
-                new Rotate(-20, Rotate.X_AXIS),
-                new Translate(0, 0, -15));
+        cameraYRotate = new Rotate(-45.0, Rotate.Y_AXIS);
+        cameraXRotate = new Rotate(-30.0, Rotate.X_AXIS);
+        cameraTranslate = new Translate(0.0, 0.0, -15.0);
+        camera.getTransforms().addAll(cameraYRotate, cameraXRotate, cameraTranslate);
 
         // lights
         PointLight pLight = new PointLight(Color.WHITE);
@@ -129,19 +132,34 @@ public class Main extends Application {
         record.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                recorder.startRecording(robot, box, boxRotate);
+                recorder.record(robot, box, boxRotate);
+                play.setDisable(true);
+                record.setDisable(true);
             }
         });
         play.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 recorder.play(robot, box, boxRotate, floor);
+                play.setDisable(true);
+                record.setDisable(true);
+                stop.setDisable(true);
+                recorder.setOnPlayFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        play.setDisable(false);
+                        record.setDisable(false);
+                        stop.setDisable(false);
+                    }
+                });
             }
         });
         stop.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 recorder.stopAll();
+                play.setDisable(false);
+                record.setDisable(false);
             }
         });
 
@@ -170,6 +188,37 @@ public class Main extends Application {
         GridPane.setHalignment(recordLabel, HPos.CENTER);
 
         return controls;
+    }
+
+    private void handleMouse(Scene scene) {
+        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+                mousePosX = mouseOldX = e.getSceneX();
+                mousePosY = mouseOldY = e.getSceneY();
+                if (e.isSecondaryButtonDown()) {
+                    cameraYRotate.setAngle(-45.0);
+                    cameraXRotate.setAngle(-30.0);
+                    cameraTranslate.setZ(-15.0);
+                }
+            }
+        });
+        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = e.getSceneX();
+                mousePosY = e.getSceneY();
+
+                if (e.isPrimaryButtonDown()) {
+                    cameraYRotate.setAngle(cameraYRotate.getAngle() + 0.1*(mousePosX - mouseOldX));
+                    if (cameraXRotate.getAngle() - 0.1*(mousePosY - mouseOldY) < 0.0)
+                        cameraXRotate.setAngle(cameraXRotate.getAngle() - 0.1*(mousePosY - mouseOldY));
+                }
+                else if (e.isMiddleButtonDown()) {
+                    cameraTranslate.setZ(cameraTranslate.getZ() - 0.01*(mousePosY - mouseOldY));
+                }
+            }
+        });
     }
 
     /**

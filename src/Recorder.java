@@ -8,6 +8,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import javax.swing.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +17,7 @@ import java.util.Queue;
  */
 public class Recorder {
     Queue<DoublePropertyTarget> positions;
+    EventHandler<ActionEvent> onPlayFinished;
     boolean isRecording, isPlaying;
     double initialBoxTranslateX, initialBoxTranslateZ, initialBoxRotateAngle;
 
@@ -25,17 +27,16 @@ public class Recorder {
         isPlaying = false;
     }
 
-    public void startRecording(Robot robot, Box box, Rotate boxRotate) {
-        if (!isPlaying) {
-            isRecording = true;
-            addPos(robot.outerAngleProperty());
-            addPos(robot.innerAngleProperty());
-            addPos(robot.effectorAngleProperty());
-            addPos(robot.effectorPosProperty());
-            initialBoxTranslateX = box.getTranslateX();
-            initialBoxTranslateZ = box.getTranslateZ();
-            initialBoxRotateAngle = boxRotate.getAngle();
-        }
+    public void record(Robot robot, Box box, Rotate boxRotate) {
+        isRecording = true;
+        positions.clear();
+        addPos(robot.outerAngleProperty());
+        addPos(robot.innerAngleProperty());
+        addPos(robot.effectorAngleProperty());
+        addPos(robot.effectorPosProperty());
+        initialBoxTranslateX = box.getTranslateX();
+        initialBoxTranslateZ = box.getTranslateZ();
+        initialBoxRotateAngle = boxRotate.getAngle();
     }
 
     public void play(Robot robot, Box box, Rotate boxRotate, Box floor) {
@@ -48,6 +49,7 @@ public class Recorder {
 
         if (positions.isEmpty()) {
             isPlaying = false;
+            onPlayFinished.handle(new ActionEvent());
             return;
         }
 
@@ -94,7 +96,7 @@ public class Recorder {
         else positions.add(null);
     }
 
-    //public void addGrablaydown() {
-    //    positions.add(null); // null signifies box grab/lay down attempt
-    //}
+    public void setOnPlayFinished(EventHandler<ActionEvent> _onPlayFinished) {
+        onPlayFinished = _onPlayFinished;
+    }
 }

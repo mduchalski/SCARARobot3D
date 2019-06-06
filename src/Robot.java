@@ -191,7 +191,7 @@ public class Robot extends Group {
         fallAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(
                 750.0 * Math.sqrt(rotateEffectorGroup.getTranslateX() + maxEffectorMove)),
                 new KeyValue(box.translateYProperty(),
-                        -floor.getHeight() - box.getHeight()/2.0, gravity)));
+                        - floor.getHeight() - box.getHeight() / 4.0, gravity)));
         if (recorder != null) // signified automatic operation
             fallAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
