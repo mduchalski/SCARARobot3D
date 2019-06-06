@@ -150,6 +150,11 @@ public class Robot extends Group {
                 Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
     }
 
+    public boolean isPositionLegal(double innerAngle, double outerAngle,
+                                   double effectorAngle, double effectorPos) {
+        return Math.abs(outerAngle) < maxOuterAngle && Math.abs(effectorPos) < maxEffectorMove;
+    }
+
     public void attemptGrabLaydown(Robot robot, Box box, Rotate boxRotate,
                                    Box floor, Recorder recorder) {
         if (grabbedBox == null && canGrab(box)) {

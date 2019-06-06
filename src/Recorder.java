@@ -49,7 +49,8 @@ public class Recorder {
 
         if (positions.isEmpty()) {
             isPlaying = false;
-            onPlayFinished.handle(new ActionEvent());
+            if (onPlayFinished != null)
+                onPlayFinished.handle(new ActionEvent());
             return;
         }
 
@@ -86,6 +87,11 @@ public class Recorder {
         isPlaying = false;
     }
 
+    public void abortAll() {
+        stopAll();
+        positions.clear();
+    }
+
     public boolean isRecording() {
         return isRecording;
     }
@@ -93,6 +99,12 @@ public class Recorder {
     public void addPos(DoubleProperty property) {
         if (property != null)
             positions.add(new DoublePropertyTarget(property, property.getValue()));
+        else positions.add(null);
+    }
+
+    public void addPos(DoubleProperty property, double target) {
+        if (property != null)
+            positions.add(new DoublePropertyTarget(property, target));
         else positions.add(null);
     }
 

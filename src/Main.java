@@ -110,16 +110,16 @@ public class Main extends Application {
         // controls initialization
         Label robotSettingsText = new Label("Sterowanie robotem");
         Label innerAngleLabel = new Label("Kąt ramienia wewn. [st.]:");
-        TextField innerAngleField = new TextField();
+        TextField innerAngleField = new TextField("0");
         innerAngleField.setPrefWidth(40.0);
         Label outerAngleLabel = new Label("Kąt ramienia zewn. [st.]:");
-        TextField outerAngleField = new TextField();
+        TextField outerAngleField = new TextField("0");
         outerAngleField.setPrefWidth(40.0);
         Label effectorAngleLabel = new Label("Kąt obrotu efektora [st.]:");
-        TextField effectorAngleField = new TextField();
+        TextField effectorAngleField = new TextField("0");
         effectorAngleField.setPrefWidth(40.0);
         Label effectorPosLabel = new Label("Przemieszczenie efektora:");
-        TextField effectorPosField = new TextField();
+        TextField effectorPosField = new TextField("0");
         effectorPosField.setPrefWidth(40.0);
         Button set = new Button("Zatwierdź");
         Button reset = new Button("Resetuj");
@@ -162,24 +162,56 @@ public class Main extends Application {
                 record.setDisable(false);
             }
         });
-
+        reset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                innerAngleField.setText("0");
+                outerAngleField.setText("0");
+                effectorAngleField.setText("0");
+                effectorPosField.setText("0");
+            }
+        });
+        set.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.record(robot, box, boxRotate);
+                try {
+                    double innerAngleTarget = Double.parseDouble(innerAngleField.getText()),
+                        outerAngleTarget = Double.parseDouble(outerAngleField.getText()),
+                        effectorAngleTarget = Double.parseDouble(effectorAngleField.getText()),
+                        effectorPosTarget = Double.parseDouble(effectorPosField.getText());
+                    if (!robot.isPositionLegal(innerAngleTarget, outerAngleTarget,
+                            effectorAngleTarget, effectorPosTarget))
+                        throw new Exception();
+                    recorder.addPos(robot.innerAngleProperty(), innerAngleTarget);
+                    recorder.addPos(robot.outerAngleProperty(), outerAngleTarget);
+                    recorder.addPos(robot.effectorAngleProperty(), effectorAngleTarget);
+                    recorder.addPos(robot.effectorPosProperty(), effectorPosTarget);
+                } catch (Exception e) {
+                    recorder.abortAll();
+                    innerAngleField.setText("Błąd!"); outerAngleField.clear();
+                    effectorAngleField.clear(); effectorPosField.clear();
+                }
+                recorder.play(robot, box, boxRotate, floor);
+            }
+        });
 
         // adding controls to GridPane
-        controls.add(robotSettingsText, 0, 0, 3, 1);
-        controls.add(innerAngleLabel, 0, 1, 2, 1);
-        controls.add(innerAngleField, 2, 1, 1, 1);
-        controls.add(outerAngleLabel, 0, 2, 2, 1);
-        controls.add(outerAngleField, 2, 2, 1, 1);
-        controls.add(effectorAngleLabel, 0, 3, 2, 1);
-        controls.add(effectorAngleField, 2, 3, 1, 1);
-        controls.add(effectorPosLabel, 0, 4, 2, 1);
-        controls.add(effectorPosField, 2, 4, 1, 1);
-        controls.add(reset, 1, 5, 1, 1);
-        controls.add(set, 2, 5, 1, 1);
-        controls.add(recordLabel, 0, 6, 3, 1);
-        controls.add(record, 0, 7, 1, 1);
-        controls.add(play, 1, 7, 1, 1);
-        controls.add(stop, 2, 7, 1, 1);
+        controls.add(recordLabel, 0, 0, 3, 1);
+        controls.add(record, 0, 1, 1, 1);
+        controls.add(play, 1, 1, 1, 1);
+        controls.add(stop, 2, 1, 1, 1);
+        controls.add(robotSettingsText, 0, 2, 3, 1);
+        controls.add(innerAngleLabel, 0, 3, 2, 1);
+        controls.add(innerAngleField, 2, 3, 1, 1);
+        controls.add(outerAngleLabel, 0, 4, 2, 1);
+        controls.add(outerAngleField, 2, 4, 1, 1);
+        controls.add(effectorAngleLabel, 0, 5, 2, 1);
+        controls.add(effectorAngleField, 2, 5, 1, 1);
+        controls.add(effectorPosLabel, 0, 6, 2, 1);
+        controls.add(effectorPosField, 2, 6, 1, 1);
+        controls.add(reset, 1, 7, 1, 1);
+        controls.add(set, 2, 7, 1, 1);
 
         // alignment corrections
         GridPane.setHalignment(robotSettingsText, HPos.CENTER);
