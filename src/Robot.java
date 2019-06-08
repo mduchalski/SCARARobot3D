@@ -281,7 +281,7 @@ public class Robot extends Group {
         // check distance between grabber's and box's nearest surfeces' center
         // points and relative rotation angle
         return box.localToScene(0.0, -box.getHeight() / 2.0, 0.0).distance(
-                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.3;
+                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.5;
     }
 
     /**

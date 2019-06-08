@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="72047ed4-9440-4e49-8fc4-213bc99cd6c4" name="Default Changelist" comment="">
+    <list default="true" id="72047ed4-9440-4e49-8fc4-213bc99cd6c4" name="Default Changelist" comment="minor refactoring">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DoublePropertyTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DoublePropertyTarget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Recorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Recorder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Robot.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -26,11 +23,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
+            <state relative-caret-position="614">
+              <caret line="313" selection-start-line="313" selection-end-line="313" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="method#handleMouse#0;class#Main#0" />
-                <element signature="method#handleKeyboard#0;class#Main#0" />
                 <element signature="method#performMoveFromKeyboard#0;class#Main#0" />
                 <element signature="e#13665#13666#0" expanded="true" />
                 <element signature="e#13693#13694#0" expanded="true" />
@@ -42,12 +39,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Recorder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+            <state relative-caret-position="271">
+              <caret line="89" selection-start-line="89" selection-end-line="89" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1599#1600#0" expanded="true" />
-                <element signature="e#1633#1634#0" expanded="true" />
+                <element signature="e#1698#1699#0" expanded="true" />
+                <element signature="e#1732#1733#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -56,7 +53,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DoublePropertyTarget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
+            <state relative-caret-position="480">
               <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
               <folding>
                 <element signature="e#615#616#0" expanded="true" />
@@ -71,7 +68,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SmoothBox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="960">
+            <state relative-caret-position="504">
               <caret line="48" column="25" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -83,8 +80,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Robot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="274" column="4" lean-forward="true" selection-start-line="274" selection-start-column="4" selection-end-line="292" selection-end-column="5" />
+            <state relative-caret-position="128">
+              <caret line="283" column="80" selection-start-line="283" selection-start-column="80" selection-end-line="283" selection-end-column="80" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="docComment;method#Robot#0;class#Robot#0" />
@@ -109,12 +106,8 @@
                 <element signature="method#isPositionLegal#0;class#Robot#0" />
                 <element signature="docComment;method#isPositionLegal#1;class#Robot#0" />
                 <element signature="method#isPositionLegal#1;class#Robot#0" />
-                <element signature="docComment;method#attemptGrabLaydown#0;class#Robot#0" />
-                <element signature="method#attemptGrabLaydown#0;class#Robot#0" />
-                <element signature="docComment;method#animateFall#0;class#Robot#0" />
-                <element signature="method#animateFall#0;class#Robot#0" />
-                <element signature="e#11342#11483#0" expanded="true" />
-                <element signature="e#11482#11483#0" expanded="true" />
+                <element signature="e#10530#10671#0" expanded="true" />
+                <element signature="e#10670#10671#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -134,6 +127,7 @@
       <find>rotateEffectorGroup</find>
       <find>camera</find>
       <find>handleKe</find>
+      <find>null</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -147,9 +141,9 @@
         <option value="$PROJECT_DIR$/src/RobotAction.java" />
         <option value="$PROJECT_DIR$/src/RobotPos.java" />
         <option value="$PROJECT_DIR$/src/OrbitalCamera.java" />
-        <option value="$PROJECT_DIR$/src/Recorder.java" />
         <option value="$PROJECT_DIR$/src/DoublePropertyTarget.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/Recorder.java" />
         <option value="$PROJECT_DIR$/src/Robot.java" />
       </list>
     </option>
@@ -187,6 +181,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -365,6 +360,15 @@
     <option name="localTasksCounter" value="20" />
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
@@ -378,14 +382,14 @@
       <window_info id="Favorites" order="6" sideWeight="0.5019531" side_tool="true" weight="0.20536913" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49932885" weight="0.3286119" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.71610737" weight="0.26912183" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.86979866" weight="0.40509915" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.714094" visible="true" weight="0.26912183" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.8677852" weight="0.40509915" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49798658" weight="0.3286119" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50067115" side_tool="true" visible="true" weight="0.26912183" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49932885" weight="0.3286119" />
+      <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49731544" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.28590605" side_tool="true" visible="true" weight="0.26912183" />
+      <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4986577" weight="0.3286119" />
       <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.49261746" weight="0.3286119" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -396,6 +400,16 @@
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
@@ -419,6 +433,18 @@
     <MESSAGE value="minor fixes, code documentation for Main, Recorder classes" />
     <option name="LAST_COMMIT_MESSAGE" value="minor fixes, code documentation for Main, Recorder classes" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/Recorder.java</url>
+          <line>89</line>
+          <properties />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
@@ -426,13 +452,30 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/OrbitalCamera.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/javafx-src.zip!/javafx/animation/AnimationAccessorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="131">
+          <caret line="49" selection-start-line="49" selection-end-line="49" />
+          <folding>
+            <element signature="e#888#889#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/javafx-src.zip!/javafx/animation/Animation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="1101" selection-start-line="1101" selection-end-line="1101" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
+        <state relative-caret-position="614">
+          <caret line="313" selection-start-line="313" selection-end-line="313" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="method#handleMouse#0;class#Main#0" />
-            <element signature="method#handleKeyboard#0;class#Main#0" />
             <element signature="method#performMoveFromKeyboard#0;class#Main#0" />
             <element signature="e#13665#13666#0" expanded="true" />
             <element signature="e#13693#13694#0" expanded="true" />
@@ -442,19 +485,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Recorder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+        <state relative-caret-position="271">
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1599#1600#0" expanded="true" />
-            <element signature="e#1633#1634#0" expanded="true" />
+            <element signature="e#1698#1699#0" expanded="true" />
+            <element signature="e#1732#1733#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DoublePropertyTarget.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
+        <state relative-caret-position="480">
           <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
           <folding>
             <element signature="e#615#616#0" expanded="true" />
@@ -467,7 +510,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SmoothBox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
+        <state relative-caret-position="504">
           <caret line="48" column="25" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -477,8 +520,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Robot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="274" column="4" lean-forward="true" selection-start-line="274" selection-start-column="4" selection-end-line="292" selection-end-column="5" />
+        <state relative-caret-position="128">
+          <caret line="283" column="80" selection-start-line="283" selection-start-column="80" selection-end-line="283" selection-end-column="80" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="docComment;method#Robot#0;class#Robot#0" />
@@ -503,12 +546,8 @@
             <element signature="method#isPositionLegal#0;class#Robot#0" />
             <element signature="docComment;method#isPositionLegal#1;class#Robot#0" />
             <element signature="method#isPositionLegal#1;class#Robot#0" />
-            <element signature="docComment;method#attemptGrabLaydown#0;class#Robot#0" />
-            <element signature="method#attemptGrabLaydown#0;class#Robot#0" />
-            <element signature="docComment;method#animateFall#0;class#Robot#0" />
-            <element signature="method#animateFall#0;class#Robot#0" />
-            <element signature="e#11342#11483#0" expanded="true" />
-            <element signature="e#11482#11483#0" expanded="true" />
+            <element signature="e#10530#10671#0" expanded="true" />
+            <element signature="e#10670#10671#0" expanded="true" />
           </folding>
         </state>
       </provider>
