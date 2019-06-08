@@ -108,6 +108,10 @@ public class Main extends Application {
         controls.setPadding(new Insets(8.0, 8.0, 8.0, 8.0));
 
         // controls initialization
+        Label recordLabel = new Label("Nagrywanie ruchów");
+        record = new Button("Nagrywaj");
+        play = new Button("Odtwarzaj");
+        stop = new Button("Zatrzymaj");
         Label robotSettingsText = new Label("Sterowanie robotem");
         Label innerAngleLabel = new Label("Kąt ramienia wewn. [st.]:");
         innerAngleField = new TextField("0");
@@ -123,10 +127,11 @@ public class Main extends Application {
         effectorPosField.setPrefWidth(40.0);
         set = new Button("Zatwierdź");
         reset = new Button("Resetuj");
-        Label recordLabel = new Label("Nagrywanie ruchów");
-        record = new Button("Nagrywaj");
-        play = new Button("Odtwarzaj");
-        stop = new Button("Zatrzymaj");
+        Label controlLabel = new Label("A, Q - obrót ramienia zewnętrznego\n" +
+                "W, S - obrót ramienia wewnętrznego\n" +
+                "E, D - obrót efektora\n" +
+                "R, F - przesunięcie efektora\n" +
+                "G - złapanie/puszczenie klocka");
 
         // handle control events
         handleControls();
@@ -147,6 +152,7 @@ public class Main extends Application {
         controls.add(effectorPosField, 2, 6, 1, 1);
         controls.add(reset, 1, 7, 1, 1);
         controls.add(set, 2, 7, 1, 1);
+        controls.add(controlLabel, 0, 8, 3, 1);
 
         // alignment corrections
         GridPane.setHalignment(robotSettingsText, HPos.CENTER);
