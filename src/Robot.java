@@ -203,7 +203,7 @@ public class Robot extends Group {
     public void attemptGrabLaydown(Box box, Rotate boxRotate,
                                    Box floor, Recorder recorder) {
         // attempt to grab the box
-        if (grabbedBox == null && canGrab(box)) {
+        if (grabbedBox == null && canGrab(box, boxRotate)) {
             grab(box, boxRotate, floor, recorder);
             if (recorder != null)
                 recorder.doPlay(this, box, boxRotate, floor);
@@ -229,11 +229,14 @@ public class Robot extends Group {
     }
 
     /**
-     *
-     * @param box
-     * @param boxRotate
-     * @param floor
-     * @param recorder
+     * Grabs an interactive box. Note that this function doesn't perform any
+     * checks. It's intended to be used in recording playback only.
+     * @param box interactive box
+     * @param boxRotate interactive box's rotation transform
+     * @param floor floor
+     * @param recorder recorder whose play function should be called when the
+     *                 action is finished, null if not playing
+     * @see Recorder#doPlay(Robot, Box, Rotate, Box)
      */
     public void grab(Box box, Rotate boxRotate, Box floor, Recorder recorder) {
         // hide box on the ground
@@ -293,13 +296,15 @@ public class Robot extends Group {
     /**
      * Checks whether or not the robot can grab the box in its current position.
      * @param box interactive box
+     * @param boxRotate interactive box's rotation transform
      * @return true if it can, false otherwise
      */
-    private boolean canGrab(Box box) {
+    private boolean canGrab(Box box, Rotate boxRotate) {
         // check distance between grabber's and box's nearest surfeces' center
         // points and relative rotation angle
         return box.localToScene(0.0, -box.getHeight() / 2.0, 0.0).distance(
-                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.3;
+                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.3 &&
+                Math.abs(boxRotate.getAngle() - getGrabberAngle()) % 90.0 < 20.0;
     }
 
     /**

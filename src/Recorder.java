@@ -70,6 +70,8 @@ public class Recorder {
     public void doPlay(Robot robot, Box box, Rotate boxRotate, Box floor) {
         // initial call - move box to initial position
         if (!isPlaying) {
+            if (positions.isEmpty())
+                return;
             box.setTranslateX(initialBoxTranslateX);
             box.setTranslateZ(initialBoxTranslateZ);
             box.setVisible(initialBoxVisible);
@@ -164,5 +166,7 @@ public class Recorder {
      */
     public void setOnPlayFinished(EventHandler<ActionEvent> _onPlayFinished) {
         onPlayFinished = _onPlayFinished;
+        if (!isPlaying && onPlayFinished != null)
+            onPlayFinished.handle(new ActionEvent());
     }
 }
