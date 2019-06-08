@@ -292,6 +292,9 @@ public class Main extends Application {
         scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                if (event.getCode() == G)
+                    robot.attemptGrabLaydown(box, boxRotate, floor, null);
+
                 if (recorder.isRecording()) {
                     if (event.getCode() == Q || event.getCode() == A)
                         recorder.addPos(robot.outerAngleProperty());
@@ -301,6 +304,8 @@ public class Main extends Application {
                         recorder.addPos(robot.effectorAngleProperty());
                     else if (event.getCode() == R || event.getCode() == F)
                         recorder.addPos(robot.effectorPosProperty());
+                    else if (event.getCode() == G)
+                        recorder.addPos(null);
                 }
             }
         });
@@ -308,16 +313,10 @@ public class Main extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == G) { // box grab/lay down
-                    robot.attemptGrabLaydown(robot, box, boxRotate, floor, null);
-                    if (recorder.isRecording()) recorder.addPos(null); // signifies grab/lay down attempt
-                }
-                else { // regular move
-                    performMoveFromKeyboard(event, 1.0);
-                    // undo move if new position not legal
-                    if (!robot.isPositionLegal(box, floor))
-                        performMoveFromKeyboard(event, -1.0);
-                }
+                performMoveFromKeyboard(event, 1.0);
+                // undo move if new position not legal
+                if (!robot.isPositionLegal(box, floor))
+                    performMoveFromKeyboard(event, -1.0);
             }
         });
     }

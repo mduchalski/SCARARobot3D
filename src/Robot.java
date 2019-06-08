@@ -183,6 +183,14 @@ public class Robot extends Group {
     }
 
     /**
+     * Checks whether or not some interactive box is attached to the robot.
+     * @return true if it is, false otherwise
+     */
+    public boolean isBoxGrabbed() {
+        return grabbedBox != null;
+    }
+
+    /**
      * Attempts interactive box grab/lay down. This method can be called both
      * manually or when the recorder is playing.
      * @param box interactive box
@@ -196,17 +204,7 @@ public class Robot extends Group {
                                    Box floor, Recorder recorder) {
         // attempt to grab the box
         if (grabbedBox == null && canGrab(box)) {
-            // hide box on the ground
-            box.setVisible(false);
-            // setup and add new grabbed box
-            grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
-            grabbedBox.setMaterial(box.getMaterial());
-            grabbedBox.setDrawMode(FILL);
-            grabbedBox.setTranslateX(grabber.getTranslateX());
-            grabbedBox.setTranslateY(grabber.getTranslateY() +
-                    (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
-            rotateEffectorGroup.getChildren().add(grabbedBox);
-            // call doPlay - no animation here
+            grab(box, boxRotate, floor, recorder);
             if (recorder != null)
                 recorder.doPlay(this, box, boxRotate, floor);
         }
@@ -228,6 +226,26 @@ public class Robot extends Group {
         // call doPlay if attempt unsuccessful so that recorder playback doesn't hang up
         else if (recorder != null)
             recorder.doPlay(this, box, boxRotate, floor);
+    }
+
+    /**
+     *
+     * @param box
+     * @param boxRotate
+     * @param floor
+     * @param recorder
+     */
+    public void grab(Box box, Rotate boxRotate, Box floor, Recorder recorder) {
+        // hide box on the ground
+        box.setVisible(false);
+        // setup and add new grabbed box
+        grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
+        grabbedBox.setMaterial(box.getMaterial());
+        grabbedBox.setDrawMode(FILL);
+        grabbedBox.setTranslateX(grabber.getTranslateX());
+        grabbedBox.setTranslateY(grabber.getTranslateY() +
+                (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
+        rotateEffectorGroup.getChildren().add(grabbedBox);
     }
 
     /**
@@ -260,12 +278,12 @@ public class Robot extends Group {
 
         // recorder playback - make it so that next action animated when fall
         // animation ends
-        Robot thisRobot
+        Robot thisRobot = this;
         if (recorder != null)
             fallAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    recorder.doPlay(this, box, boxRotate, floor);
+                    recorder.doPlay(thisRobot, box, boxRotate, floor);
                 }
             });
 
