@@ -10,22 +10,25 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.transform.*;
-
 import static javafx.scene.input.KeyCode.*;
 
 /**
  * Main class.
  */
 public class Main extends Application {
+    // 3D objects
     Recorder recorder;
     Robot robot;
-    Camera camera;
     Box box, floor;
-
+    // 3D transformations
     Rotate boxRotate, cameraXRotate, cameraYRotate;
     Translate cameraTranslate;
-
+    // camera and controls
+    Camera camera;
     double mousePosX, mousePosY, mouseOldX, mouseOldY;
+    // UI controls
+    TextField innerAngleField, outerAngleField, effectorAngleField, effectorPosField;
+    Button record, play, stop, set, reset;
 
     /**
      * Initializes JavaFX application
@@ -61,6 +64,7 @@ public class Main extends Application {
         floor.setDrawMode(DrawMode.FILL);
         floor.setTranslateY(0.1);
 
+        // interactive box
         box = new Box(0.675, 0.675, 0.675);
         box.setMaterial(new PhongMaterial(Color.BLUE));
         box.setDrawMode(DrawMode.FILL);
@@ -69,7 +73,7 @@ public class Main extends Application {
         boxRotate = new Rotate(0, Rotate.Y_AXIS);
         box.getTransforms().add(boxRotate);
 
-        // create and position camera
+        // camera setup
         camera = new PerspectiveCamera(true);
         cameraYRotate = new Rotate(-45.0, Rotate.Y_AXIS);
         cameraXRotate = new Rotate(-30.0, Rotate.X_AXIS);
@@ -83,14 +87,11 @@ public class Main extends Application {
         pLight.setTranslateZ(-400);
         AmbientLight aLight = new AmbientLight(Color.color(0.3, 0.3, 0.3));
 
-        // build the Scene Graph
+        // misc other setup and return group
         Group root = new Group();
         root.getChildren().addAll(camera, robot, floor, box, pLight, aLight);
-
-        // Use a SubScene
         SubScene subScene = new SubScene(root, 500,500, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-
         Group group = new Group();
         group.getChildren().add(subScene);
         return group;
@@ -110,91 +111,26 @@ public class Main extends Application {
         // controls initialization
         Label robotSettingsText = new Label("Sterowanie robotem");
         Label innerAngleLabel = new Label("Kąt ramienia wewn. [st.]:");
-        TextField innerAngleField = new TextField("0");
+        innerAngleField = new TextField("0");
         innerAngleField.setPrefWidth(40.0);
         Label outerAngleLabel = new Label("Kąt ramienia zewn. [st.]:");
-        TextField outerAngleField = new TextField("0");
+        outerAngleField = new TextField("0");
         outerAngleField.setPrefWidth(40.0);
         Label effectorAngleLabel = new Label("Kąt obrotu efektora [st.]:");
-        TextField effectorAngleField = new TextField("0");
+        effectorAngleField = new TextField("0");
         effectorAngleField.setPrefWidth(40.0);
         Label effectorPosLabel = new Label("Przemieszczenie efektora:");
-        TextField effectorPosField = new TextField("0");
+        effectorPosField = new TextField("0");
         effectorPosField.setPrefWidth(40.0);
-        Button set = new Button("Zatwierdź");
-        Button reset = new Button("Resetuj");
+        set = new Button("Zatwierdź");
+        reset = new Button("Resetuj");
         Label recordLabel = new Label("Nagrywanie ruchów");
-        Button record = new Button("Nagrywaj");
-        Button play = new Button("Odtwarzaj");
-        Button stop = new Button("Zatrzymaj");
+        record = new Button("Nagrywaj");
+        play = new Button("Odtwarzaj");
+        stop = new Button("Zatrzymaj");
 
-        // to-do: reorginize
-        record.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                recorder.record(robot, box, boxRotate);
-                play.setDisable(true);
-                record.setDisable(true);
-            }
-        });
-        play.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                recorder.play(robot, box, boxRotate, floor);
-                play.setDisable(true);
-                record.setDisable(true);
-                stop.setDisable(true);
-                recorder.setOnPlayFinished(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        play.setDisable(false);
-                        record.setDisable(false);
-                        stop.setDisable(false);
-                    }
-                });
-            }
-        });
-        stop.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                recorder.stopAll();
-                play.setDisable(false);
-                record.setDisable(false);
-            }
-        });
-        reset.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                innerAngleField.setText("0");
-                outerAngleField.setText("0");
-                effectorAngleField.setText("0");
-                effectorPosField.setText("0");
-            }
-        });
-        set.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                recorder.record(robot, box, boxRotate);
-                try {
-                    double innerAngleTarget = Double.parseDouble(innerAngleField.getText()),
-                        outerAngleTarget = Double.parseDouble(outerAngleField.getText()),
-                        effectorAngleTarget = Double.parseDouble(effectorAngleField.getText()),
-                        effectorPosTarget = Double.parseDouble(effectorPosField.getText());
-                    if (!robot.isPositionLegal(innerAngleTarget, outerAngleTarget,
-                            effectorAngleTarget, effectorPosTarget))
-                        throw new Exception();
-                    recorder.addPos(robot.innerAngleProperty(), innerAngleTarget);
-                    recorder.addPos(robot.outerAngleProperty(), outerAngleTarget);
-                    recorder.addPos(robot.effectorAngleProperty(), effectorAngleTarget);
-                    recorder.addPos(robot.effectorPosProperty(), effectorPosTarget);
-                } catch (Exception e) {
-                    recorder.abortAll();
-                    innerAngleField.setText("Błąd!"); outerAngleField.clear();
-                    effectorAngleField.clear(); effectorPosField.clear();
-                }
-                recorder.play(robot, box, boxRotate, floor);
-            }
-        });
+        // handle control events
+        handleControls();
 
         // adding controls to GridPane
         controls.add(recordLabel, 0, 0, 3, 1);
@@ -222,6 +158,102 @@ public class Main extends Application {
         return controls;
     }
 
+    /**
+     * Handles UI controls-related events.
+     * @see Main#createControls()
+     */
+    private void handleControls() {
+        record.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.doRecord(robot, box, boxRotate);
+                play.setDisable(true);
+                record.setDisable(true);
+                set.setDisable(true);
+            }
+        });
+        play.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.doPlay(robot, box, boxRotate, floor);
+                play.setDisable(true);
+                record.setDisable(true);
+                stop.setDisable(true);
+                set.setDisable(true);
+                recorder.setOnPlayFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        play.setDisable(false);
+                        record.setDisable(false);
+                        stop.setDisable(false);
+                        set.setDisable(false);
+                        recorder.setOnPlayFinished(null);
+                    }
+                });
+            }
+        });
+        stop.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.stopAll();
+                play.setDisable(false);
+                record.setDisable(false);
+                set.setDisable(false);
+            }
+        });
+        reset.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                innerAngleField.setText("0");
+                outerAngleField.setText("0");
+                effectorAngleField.setText("0");
+                effectorPosField.setText("0");
+            }
+        });
+        set.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                recorder.doRecord(robot, box, boxRotate);
+                try {
+                    double innerAngleTarget = Double.parseDouble(innerAngleField.getText()),
+                            outerAngleTarget = Double.parseDouble(outerAngleField.getText()),
+                            effectorAngleTarget = Double.parseDouble(effectorAngleField.getText()),
+                            effectorPosTarget = Double.parseDouble(effectorPosField.getText());
+                    if (!robot.isPositionLegal(innerAngleTarget, outerAngleTarget,
+                            effectorAngleTarget, effectorPosTarget))
+                        throw new Exception();
+                    recorder.addPos(robot.innerAngleProperty(), innerAngleTarget);
+                    recorder.addPos(robot.outerAngleProperty(), outerAngleTarget);
+                    recorder.addPos(robot.effectorAngleProperty(), effectorAngleTarget);
+                    recorder.addPos(robot.effectorPosProperty(), effectorPosTarget);
+                } catch (Exception e) {
+                    recorder.abortAll();
+                    innerAngleField.setText("Błąd!"); outerAngleField.clear();
+                    effectorAngleField.clear(); effectorPosField.clear();
+                }
+                recorder.doPlay(robot, box, boxRotate, floor);
+                play.setDisable(true);
+                record.setDisable(true);
+                stop.setDisable(true);
+                set.setDisable(true);
+                recorder.setOnPlayFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        play.setDisable(false);
+                        record.setDisable(false);
+                        stop.setDisable(false);
+                        set.setDisable(false);
+                        recorder.setOnPlayFinished(null);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Handles mouse input for camera control.
+     * @param scene active scene
+     */
     private void handleMouse(Scene scene) {
         scene.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override public void handle(MouseEvent e) {
@@ -254,7 +286,7 @@ public class Main extends Application {
     }
 
     /**
-     * Handles keyboard input.
+     * Handles keyboard input for robotic arm control.
      * @param scene active scene
      */
     private void handleKeyboard(Scene scene) {
@@ -291,6 +323,13 @@ public class Main extends Application {
         });
     }
 
+    /**
+     * Handles keyboard-initiated robot moves. Multiplier can be specified for
+     * speed changes and action reversal.
+     * @param event keyboard event
+     * @param mult specified rotation/move multiplier
+     * @see Main#handleKeyboard(Scene)
+     */
     private void performMoveFromKeyboard(KeyEvent event, double mult) {
         switch (event.getCode()) {
             case Q:
