@@ -185,6 +185,7 @@ public class Robot extends Group {
     /**
      * Attempts interactive box grab/lay down. This method can be called both
      * manually or when the recorder is playing.
+     * @param robot wtf
      * @param box interactive box
      * @param boxRotate interactive box's rotation transform
      * @param floor floor
@@ -192,7 +193,7 @@ public class Robot extends Group {
      *                 action is finished, null if not playing
      * @see Recorder#doPlay(Robot, Box, Rotate, Box)
      */
-    public void attemptGrabLaydown(Box box, Rotate boxRotate,
+    public void attemptGrabLaydown(Robot robot, Box box, Rotate boxRotate,
                                    Box floor, Recorder recorder) {
         // attempt to grab the box
         if (grabbedBox == null && canGrab(box)) {
@@ -208,7 +209,7 @@ public class Robot extends Group {
             rotateEffectorGroup.getChildren().add(grabbedBox);
             // call doPlay - no animation here
             if (recorder != null)
-                recorder.doPlay(this, box, boxRotate, floor);
+                recorder.doPlay(robot, box, boxRotate, floor);
         }
         // attempt to lay down the box
         else if (grabbedBox != null) {
@@ -219,26 +220,26 @@ public class Robot extends Group {
             box.setTranslateZ(grabberPos.getZ());
             boxRotate.setAngle(getGrabberAngle());
             // animate box's fall to the ground
-            animateFall(box, boxRotate, floor, recorder);
+            animateFall(robot, box, boxRotate, floor, recorder);
             // un-hide box on the ground and remove grabbed box
             box.setVisible(true);
             rotateEffectorGroup.getChildren().remove(grabbedBox);
             grabbedBox = null;
         }
         // call doPlay if attempt unsuccessful so that recorder playback doesn't hang up
-        else if (recorder != null)
-            recorder.doPlay(this, box, boxRotate, floor);
+        else recorder.doPlay(robot, box, boxRotate, floor);
     }
 
     /**
      * Sets up and executed quasi-gravity fall of attached box to the ground.
+     * @param robot wtf
      * @param box interactive box
      * @param boxRotate interactive box's rotation transform
      * @param floor floor
      * @param recorder recorder whose play function should be called when the
      *                 animation is finished, null if not playing
      */
-    private void animateFall(Box box, Rotate boxRotate,
+    private void animateFall(Robot robot, Box box, Rotate boxRotate,
                              Box floor, Recorder recorder) {
         final Timeline fallAnimation = new Timeline();
         fallAnimation.setCycleCount(1);
@@ -260,12 +261,11 @@ public class Robot extends Group {
 
         // recorder playback - make it so that next action animated when fall
         // animation ends
-        Robot thisRobot = this;
         if (recorder != null)
             fallAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    recorder.doPlay(thisRobot, box, boxRotate, floor);
+                    recorder.doPlay(robot, box, boxRotate, floor);
                 }
             });
 
