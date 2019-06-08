@@ -309,7 +309,7 @@ public class Main extends Application {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == G) { // box grab/lay down
-                    robot.attemptGrabLaydown(robot, box, boxRotate, floor, null);
+                    robot.attemptGrabLaydown(box, boxRotate, floor, null);
                     if (recorder.isRecording()) recorder.addPos(null); // signifies grab/lay down attempt
                 }
                 else { // regular move

@@ -84,9 +84,9 @@ public class Recorder {
 
         // null assigned DoubleProperty signifies grab/lay down attempt,
         // animation handed off to the robot
-        if (positions.peek() == null) {
+        if (positions.peek().getProperty() == null) {
             positions.poll();
-            robot.attemptGrabLaydown(robot, box, boxRotate, floor, this);
+            robot.attemptGrabLaydown(box, boxRotate, floor, this);
             return;
         }
 
@@ -140,9 +140,8 @@ public class Recorder {
      * @see Recorder#addPos(DoubleProperty, double)
      */
     public void addPos(DoubleProperty property) {
-        if (property != null)
-            positions.add(new DoublePropertyTarget(property, property.getValue()));
-        else positions.add(null);
+        positions.add(new DoublePropertyTarget(property,
+                (property == null) ? 0 : property.getValue()));
     }
 
     /**
@@ -151,9 +150,7 @@ public class Recorder {
      * @param target property's target value to record
      */
     public void addPos(DoubleProperty property, double target) {
-        if (property != null)
-            positions.add(new DoublePropertyTarget(property, target));
-        else positions.add(null);
+        positions.add(new DoublePropertyTarget(property, target));
     }
 
     /**
