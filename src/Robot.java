@@ -1,17 +1,12 @@
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
+import javafx.animation.*;
+import javafx.event.*;
 import javafx.scene.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
 import javafx.scene.transform.*;
 import javafx.util.Duration;
-
+import javafx.geometry.Point3D;
+import javafx.beans.property.DoubleProperty;
 import static javafx.scene.shape.DrawMode.FILL;
 
 /**
@@ -125,22 +120,45 @@ public class Robot extends Group {
         rotateEffectorGroup.setTranslateY(rotateEffectorGroup.getTranslateY() + dist);
     }
 
+    /**
+     * Retrieves inner angle rotation property
+     * @return property
+     */
     public DoubleProperty innerAngleProperty() {
         return rotateInnerTr.angleProperty();
     }
 
+    /**
+     * Retrieves outer angle rotation property
+     * @return property
+     */
     public DoubleProperty outerAngleProperty() {
         return rotateOuterTr.angleProperty();
     }
 
+    /**
+     * Retrieves effector angle rotation property
+     * @return property
+     */
     public DoubleProperty effectorAngleProperty() {
         return rotateEffectorTr.angleProperty();
     }
 
+    /**
+     * Retrieves effector position translation property
+     * @return property
+     */
     public DoubleProperty effectorPosProperty() {
         return rotateEffectorGroup.translateYProperty();
     }
 
+    /**
+     * Checks whether or not the current robot position is legal with respect to
+     * saved bounds and collision with the interactive box or the floor.
+     * @param box interactive box
+     * @param floor floor
+     * @return true if it is, false otherwise
+     */
     public boolean isPositionLegal(Box box, Box floor) {
         return  ((grabbedBox ==  null && !grabber.localToScene(grabber.getBoundsInLocal())
                         .intersects(box.localToScene(box.getBoundsInLocal()))) ||
@@ -150,15 +168,38 @@ public class Robot extends Group {
                 Math.abs(rotateEffectorGroup.getTranslateY()) < maxEffectorMove;
     }
 
+    /**
+     * Checks whether or not a specified robot position is legal with respect to
+     * saved bounds.
+     * @param innerAngle inner arm angle
+     * @param outerAngle outer arm angle
+     * @param effectorAngle effector angle
+     * @param effectorPos effector position
+     * @return true if it is, false otherwise
+     */
     public boolean isPositionLegal(double innerAngle, double outerAngle,
                                    double effectorAngle, double effectorPos) {
         return Math.abs(outerAngle) < maxOuterAngle && Math.abs(effectorPos) < maxEffectorMove;
     }
 
+    /**
+     * Attempts interactive box grab/lay down. This method can be called both
+     * manually or when the recorder is playing.
+     * @param robot wtf
+     * @param box interactive box
+     * @param boxRotate interactive box's rotation transform
+     * @param floor floor
+     * @param recorder recorder whose play function should be called when the
+     *                 action is finished, null if not playing
+     * @see Recorder#doPlay(Robot, Box, Rotate, Box)
+     */
     public void attemptGrabLaydown(Robot robot, Box box, Rotate boxRotate,
                                    Box floor, Recorder recorder) {
+        // attempt to grab the box
         if (grabbedBox == null && canGrab(box)) {
+            // hide box on the ground
             box.setVisible(false);
+            // setup and add new grabbed box
             grabbedBox = new Box(box.getWidth(), box.getHeight(), box.getDepth());
             grabbedBox.setMaterial(box.getMaterial());
             grabbedBox.setDrawMode(FILL);
@@ -166,38 +207,61 @@ public class Robot extends Group {
             grabbedBox.setTranslateY(grabber.getTranslateY() +
                     (grabbedBox.getHeight() + grabber.getHeight()) / 2.0);
             rotateEffectorGroup.getChildren().add(grabbedBox);
-            if (recorder != null) recorder.doPlay(robot, box, boxRotate, floor);
+            // call doPlay - no animation here
+            if (recorder != null)
+                recorder.doPlay(robot, box, boxRotate, floor);
         }
-        else if (grabbedBox != null) { // to-do: correct angle
+        // attempt to lay down the box
+        else if (grabbedBox != null) {
+            // retrieve and move box to current grabber coordinates
             Point3D grabberPos = grabber.localToScene(0, 0, 0);
             box.setTranslateX(grabberPos.getX());
             box.setTranslateY(grabberPos.getY() + grabber.getHeight()/2.0 + box.getHeight()/2.0);
             box.setTranslateZ(grabberPos.getZ());
             boxRotate.setAngle(getGrabberAngle());
+            // animate box's fall to the ground
             animateFall(robot, box, boxRotate, floor, recorder);
-            System.out.println(getGrabberAngle());
+            // un-hide box on the ground and remove grabbed box
             box.setVisible(true);
             rotateEffectorGroup.getChildren().remove(grabbedBox);
             grabbedBox = null;
         }
+        // call doPlay if attempt unsuccessful so that recorder playback doesn't hang up
+        else recorder.doPlay(robot, box, boxRotate, floor);
     }
 
+    /**
+     * Sets up and executed quasi-gravity fall of attached box to the ground.
+     * @param robot wtf
+     * @param box interactive box
+     * @param boxRotate interactive box's rotation transform
+     * @param floor floor
+     * @param recorder recorder whose play function should be called when the
+     *                 animation is finished, null if not playing
+     */
     private void animateFall(Robot robot, Box box, Rotate boxRotate,
                              Box floor, Recorder recorder) {
         final Timeline fallAnimation = new Timeline();
         fallAnimation.setCycleCount(1);
         fallAnimation.setAutoReverse(false);
+
+        // constant acceleration fall - quadratic relationship between time and
+        // y-axis position...
         Interpolator gravity = new Interpolator() {
             @Override
             protected double curve(double t) {
                 return t*t;
             }
         };
+        //...and square root relationship between fall time and height
         fallAnimation.getKeyFrames().add(new KeyFrame(Duration.millis(
                 750.0 * Math.sqrt(rotateEffectorGroup.getTranslateX() + maxEffectorMove)),
                 new KeyValue(box.translateYProperty(),
                         - floor.getHeight() - box.getHeight() / 4.0, gravity)));
-        if (recorder != null) // signified automatic operation
+
+        // recorder playback - make it so that next action animated when fall
+        // animation ends
+        if (recorder != null)
             fallAnimation.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -208,12 +272,23 @@ public class Robot extends Group {
         fallAnimation.play();
     }
 
-    private boolean canGrab(Box box) { // to-do: angles
+    /**
+     * Checks whether or not the robot can grab the box in its current position.
+     * @param box interactive box
+     * @return true if it can, false otherwise
+     */
+    private boolean canGrab(Box box) {
+        // check distance between grabber's and box's nearest surfeces' center
+        // points and relative rotation angle
         return box.localToScene(0.0, -box.getHeight() / 2.0, 0.0).distance(
-                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.5;
+                grabber.localToScene(0.0, grabber.getHeight() / 2.0, 0.0)) < 0.3;
     }
 
-    public double getGrabberAngle() {
+    /**
+     * Get grabber rotation angle with respect to scene X-axis.
+     * @return angle in degrees
+     */
+    private double getGrabberAngle() {
         return rotateEffectorTr.getAngle() + rotateInnerTr.getAngle() + rotateOuterTr.getAngle();
     }
 }

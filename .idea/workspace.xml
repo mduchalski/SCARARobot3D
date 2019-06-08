@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="72047ed4-9440-4e49-8fc4-213bc99cd6c4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DoublePropertyTarget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DoublePropertyTarget.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Recorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Recorder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Robot.java" afterDir="false" />
@@ -25,10 +26,9 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5340">
-              <caret line="328" column="34" selection-start-line="328" selection-start-column="34" selection-end-line="328" selection-end-column="34" />
+            <state relative-caret-position="60">
+              <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="method#handleMouse#0;class#Main#0" />
                 <element signature="method#handleKeyboard#0;class#Main#0" />
                 <element signature="method#performMoveFromKeyboard#0;class#Main#0" />
@@ -39,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Recorder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="158" column="58" selection-start-line="158" selection-start-column="58" selection-end-line="158" selection-end-column="58" />
+            <state relative-caret-position="260">
+              <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1599#1600#0" expanded="true" />
@@ -56,8 +56,14 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DoublePropertyTarget.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+            <state relative-caret-position="600">
+              <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
+              <folding>
+                <element signature="e#615#616#0" expanded="true" />
+                <element signature="e#646#647#0" expanded="true" />
+                <element signature="e#717#718#0" expanded="true" />
+                <element signature="e#749#750#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,7 +71,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SmoothBox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="920">
+            <state relative-caret-position="960">
               <caret line="48" column="25" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -74,13 +80,41 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Robot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2800">
-              <caret line="154" column="95" selection-start-line="154" selection-start-column="95" selection-end-line="154" selection-end-column="95" />
+            <state relative-caret-position="328">
+              <caret line="274" column="4" lean-forward="true" selection-start-line="274" selection-start-column="4" selection-end-line="292" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="docComment;method#Robot#0;class#Robot#0" />
+                <element signature="method#Robot#0;class#Robot#0" />
+                <element signature="docComment;method#rotateInner#0;class#Robot#0" />
+                <element signature="method#rotateInner#0;class#Robot#0" />
+                <element signature="docComment;method#rotateOuter#0;class#Robot#0" />
+                <element signature="method#rotateOuter#0;class#Robot#0" />
+                <element signature="docComment;method#rotateEffector#0;class#Robot#0" />
+                <element signature="method#rotateEffector#0;class#Robot#0" />
+                <element signature="docComment;method#moveEffector#0;class#Robot#0" />
+                <element signature="method#moveEffector#0;class#Robot#0" />
+                <element signature="docComment;method#innerAngleProperty#0;class#Robot#0" />
+                <element signature="method#innerAngleProperty#0;class#Robot#0" />
+                <element signature="docComment;method#outerAngleProperty#0;class#Robot#0" />
+                <element signature="method#outerAngleProperty#0;class#Robot#0" />
+                <element signature="docComment;method#effectorAngleProperty#0;class#Robot#0" />
+                <element signature="method#effectorAngleProperty#0;class#Robot#0" />
+                <element signature="docComment;method#effectorPosProperty#0;class#Robot#0" />
+                <element signature="method#effectorPosProperty#0;class#Robot#0" />
+                <element signature="docComment;method#isPositionLegal#0;class#Robot#0" />
+                <element signature="method#isPositionLegal#0;class#Robot#0" />
+                <element signature="docComment;method#isPositionLegal#1;class#Robot#0" />
+                <element signature="method#isPositionLegal#1;class#Robot#0" />
+                <element signature="docComment;method#attemptGrabLaydown#0;class#Robot#0" />
+                <element signature="method#attemptGrabLaydown#0;class#Robot#0" />
+                <element signature="docComment;method#animateFall#0;class#Robot#0" />
+                <element signature="method#animateFall#0;class#Robot#0" />
+                <element signature="e#11342#11483#0" expanded="true" />
+                <element signature="e#11482#11483#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -112,11 +146,11 @@
         <option value="$PROJECT_DIR$/src/SmoothBox.java" />
         <option value="$PROJECT_DIR$/src/RobotAction.java" />
         <option value="$PROJECT_DIR$/src/RobotPos.java" />
-        <option value="$PROJECT_DIR$/src/DoublePropertyTarget.java" />
         <option value="$PROJECT_DIR$/src/OrbitalCamera.java" />
-        <option value="$PROJECT_DIR$/src/Robot.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Recorder.java" />
+        <option value="$PROJECT_DIR$/src/DoublePropertyTarget.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/Robot.java" />
       </list>
     </option>
   </component>
@@ -321,7 +355,14 @@
       <option name="project" value="LOCAL" />
       <updated>1559852562252</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="minor fixes, code documentation for Main, Recorder classes">
+      <created>1560015041529</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1560015041529</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -375,7 +416,8 @@
     <MESSAGE value="fixed recording bugs, full core functionality implemented" />
     <MESSAGE value="minor recording &amp; UI fixes, fully functional camera controls" />
     <MESSAGE value="add numerical positioning" />
-    <option name="LAST_COMMIT_MESSAGE" value="add numerical positioning" />
+    <MESSAGE value="minor fixes, code documentation for Main, Recorder classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor fixes, code documentation for Main, Recorder classes" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
@@ -384,39 +426,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/OrbitalCamera.java" />
-    <entry file="file://$PROJECT_DIR$/src/DoublePropertyTarget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SmoothBox.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="920">
-          <caret line="48" column="25" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Robot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2800">
-          <caret line="154" column="95" selection-start-line="154" selection-start-column="95" selection-end-line="154" selection-end-column="95" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5340">
-          <caret line="328" column="34" selection-start-line="328" selection-start-column="34" selection-end-line="328" selection-end-column="34" />
+        <state relative-caret-position="60">
+          <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="method#handleMouse#0;class#Main#0" />
             <element signature="method#handleKeyboard#0;class#Main#0" />
             <element signature="method#performMoveFromKeyboard#0;class#Main#0" />
@@ -428,12 +442,73 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Recorder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="158" column="58" selection-start-line="158" selection-start-column="58" selection-end-line="158" selection-end-column="58" />
+        <state relative-caret-position="260">
+          <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1599#1600#0" expanded="true" />
             <element signature="e#1633#1634#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DoublePropertyTarget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
+          <folding>
+            <element signature="e#615#616#0" expanded="true" />
+            <element signature="e#646#647#0" expanded="true" />
+            <element signature="e#717#718#0" expanded="true" />
+            <element signature="e#749#750#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SmoothBox.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="48" column="25" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Robot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="274" column="4" lean-forward="true" selection-start-line="274" selection-start-column="4" selection-end-line="292" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;method#Robot#0;class#Robot#0" />
+            <element signature="method#Robot#0;class#Robot#0" />
+            <element signature="docComment;method#rotateInner#0;class#Robot#0" />
+            <element signature="method#rotateInner#0;class#Robot#0" />
+            <element signature="docComment;method#rotateOuter#0;class#Robot#0" />
+            <element signature="method#rotateOuter#0;class#Robot#0" />
+            <element signature="docComment;method#rotateEffector#0;class#Robot#0" />
+            <element signature="method#rotateEffector#0;class#Robot#0" />
+            <element signature="docComment;method#moveEffector#0;class#Robot#0" />
+            <element signature="method#moveEffector#0;class#Robot#0" />
+            <element signature="docComment;method#innerAngleProperty#0;class#Robot#0" />
+            <element signature="method#innerAngleProperty#0;class#Robot#0" />
+            <element signature="docComment;method#outerAngleProperty#0;class#Robot#0" />
+            <element signature="method#outerAngleProperty#0;class#Robot#0" />
+            <element signature="docComment;method#effectorAngleProperty#0;class#Robot#0" />
+            <element signature="method#effectorAngleProperty#0;class#Robot#0" />
+            <element signature="docComment;method#effectorPosProperty#0;class#Robot#0" />
+            <element signature="method#effectorPosProperty#0;class#Robot#0" />
+            <element signature="docComment;method#isPositionLegal#0;class#Robot#0" />
+            <element signature="method#isPositionLegal#0;class#Robot#0" />
+            <element signature="docComment;method#isPositionLegal#1;class#Robot#0" />
+            <element signature="method#isPositionLegal#1;class#Robot#0" />
+            <element signature="docComment;method#attemptGrabLaydown#0;class#Robot#0" />
+            <element signature="method#attemptGrabLaydown#0;class#Robot#0" />
+            <element signature="docComment;method#animateFall#0;class#Robot#0" />
+            <element signature="method#animateFall#0;class#Robot#0" />
+            <element signature="e#11342#11483#0" expanded="true" />
+            <element signature="e#11482#11483#0" expanded="true" />
           </folding>
         </state>
       </provider>

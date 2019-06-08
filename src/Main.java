@@ -1,8 +1,7 @@
 import javafx.application.*;
 import javafx.event.*;
 import javafx.geometry.*;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.*;
 import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.control.*;

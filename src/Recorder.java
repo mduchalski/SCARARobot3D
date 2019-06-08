@@ -8,6 +8,7 @@ import javafx.util.Duration;
 
 /**
  * This class implements robot movement recording and playback functionality.
+ * @see DoublePropertyTarget
  */
 public class Recorder {
     Queue<DoublePropertyTarget> positions;
